@@ -15,7 +15,7 @@ export default function Signin() {
           </button>
           <p>
             Already have not an account?{" "}
-            <Link className="text-blue-600" to="/signin">
+            <Link className="text-blue-600" to="/signup">
               Sign Up
             </Link>
           </p>
