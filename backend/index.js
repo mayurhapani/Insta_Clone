@@ -2,12 +2,14 @@ const express = require("express");
 const app = express();
 const db = require("./config/database");
 
-const uRouter = require("./routers/user.router");
 const cors = require("cors");
+const cookieParser = require("cookie-parser");
+const uRouter = require("./routers/user.router");
 
 require("dotenv").config();
 
 app.use(cors());
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
