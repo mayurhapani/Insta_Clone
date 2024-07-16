@@ -14,16 +14,12 @@ function App() {
     <>
       <BrowserRouter>
         <Header />
-        <div className=" bg-[url(./assets/images/main_bg.jfif)] bg-no-repeat bg-cover h-screen">
-          <div className="container mx-auto ">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/signup" element={<Signup />} />
-              <Route path="/signin" element={<Signin />} />
-              <Route path="/profile" element={<Profile />} />
-            </Routes>
-          </div>
-        </div>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/signin" element={<Signin />} />
+          <Route path="/profile" element={<Profile />} />
+        </Routes>
         <ToastContainer />
       </BrowserRouter>
     </>
