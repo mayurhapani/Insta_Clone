@@ -1,14 +1,69 @@
+import axios from "axios";
 import img1 from "../assets/images/demo_user.png";
 import { useState } from "react";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 export default function CreatePost() {
   const [image, setImage] = useState(null);
+  const [disc, setDisc] = useState("");
+
+  const navigate = useNavigate();
+
+  const notify1 = (msg) => toast.error(msg);
+  const notify2 = (msg) => toast.success(msg);
+
+  // console.log(image, disc);
+
+  const shareData = async () => {
+    try {
+      const token = localStorage.getItem("token");
+
+      // image upload
+      const dataImage = new FormData();
+      dataImage.append("file", image);
+      dataImage.append("upload_preset", "instaClone");
+      dataImage.append("cloud_name", "instaclone21");
+
+      const responseImage = await axios.post(
+        "https://api.cloudinary.com/v1_1/instaclone21/upload",
+        dataImage
+      );
+      const uploadedImagePath = responseImage.data.url;
+
+      // data send to backend
+      const response = await axios.post(
+        "http://localhost:8001/createPost",
+        {
+          disc: disc,
+          image: uploadedImagePath,
+        },
+        {
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      console.log(response);
+      if (response) {
+        notify2(response.data.message);
+        navigate("/");
+      } else {
+        notify1(response.data.message);
+        navigate("/createPost");
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
   const loadFile = (event) => {
     var output = document.getElementById("output");
     output.src = URL.createObjectURL(event.target.files[0]);
     output.onload = function () {
-      URL.revokeObjectURL(output.src); // free memory
+      URL.revokeObjectURL(output.src);
     };
     setImage(event.target.files[0]);
   };
@@ -18,9 +73,16 @@ export default function CreatePost() {
       <div className="pt-32 flex flex-col items-center">
         <div className="max-w-80 border border-[rgb(173, 173, 173)] rounded-sm">
           {/* header */}
-          <div className="flex p-2 border border-[rgb(173, 173, 173)]">
+          <div className="flex p-2 border-b border-[rgb(173, 173, 173)]">
             <h1 className="w-full text-center font-bold">Create New Post</h1>
-            <button className="font-bold text-blue-600 text-sm">Share</button>
+            <button
+              onClick={() => {
+                shareData();
+              }}
+              className="font-bold text-blue-600 text-sm"
+            >
+              Share
+            </button>
           </div>
 
           {/* image upload */}
@@ -59,8 +121,11 @@ export default function CreatePost() {
             <span className="ms-3 text-sm font-bold">User Name</span>
           </div>
           <textarea
-            className="w-full px-2"
+            className="w-full p-2 outline-none"
             placeholder="Write a caption....."
+            onChange={(e) => {
+              setDisc(e.target.value);
+            }}
             name=""
             id=""
           ></textarea>

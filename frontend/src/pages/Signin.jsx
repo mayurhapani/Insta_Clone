@@ -41,7 +41,10 @@ export default function Signin() {
         { withCredentials: true }
       );
 
-      if (response) {
+      if (response.status === 200) {
+        console.log(response);
+        const token = response.data.token;
+        localStorage.setItem("token", token);
         notify2(response.data.message);
         navigate("/");
       } else {

@@ -4,7 +4,7 @@ export default function Home() {
   return (
     <div className="container mx-auto ">
       <div className="pt-32 flex flex-col items-center">
-        <div className=" w-1/2 rounded-sm">
+        <div className="max-w-[22rem] rounded-sm">
           <div className="card border border-[rgb(173, 173, 173)] rounded-sm">
             {/* card header */}
             <div className="flex justify-start items-center p-2">

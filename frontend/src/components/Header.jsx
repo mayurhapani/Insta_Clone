@@ -10,13 +10,19 @@ export default function Header() {
           <nav>
             <ul className="flex">
               <Link to="/signin">
-                <li className="py-3 px-10 text-xl font-semibold text-gray-600">SignIn</li>
+                <li className="py-3 px-6 text-xl font-semibold text-gray-600">SignIn</li>
               </Link>
               <Link to="/signup">
-                <li className="py-3 px-10 text-xl font-semibold text-gray-600">Sign Up</li>
+                <li className="py-3 px-6 text-xl font-semibold text-gray-600">Sign Up</li>
+              </Link>
+              <Link to="/">
+                <li className="py-3 px-6 text-xl font-semibold text-gray-600">Home</li>
               </Link>
               <Link to="/profile">
-                <li className="py-3 px-10 text-xl font-semibold text-gray-600">Profile</li>
+                <li className="py-3 px-6 text-xl font-semibold text-gray-600">Profile</li>
+              </Link>
+              <Link to="/createPost">
+                <li className="py-3 px-6 text-xl font-semibold text-gray-600">Create Post</li>
               </Link>
             </ul>
           </nav>
