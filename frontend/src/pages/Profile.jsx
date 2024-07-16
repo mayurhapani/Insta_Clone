@@ -1,5 +1,5 @@
 import img1 from "../assets/images/demo_user.png";
- export default function Profile() {
+export default function Profile() {
   return (
     <div className="container mx-auto ">
       <div className="pt-32 flex flex-col items-center w-1/2 mx-auto">

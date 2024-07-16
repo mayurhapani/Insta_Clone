@@ -39,7 +39,7 @@ const login = async (req, res) => {
     if (!isMatch) {
       return res.status(401).json({ message: "Invalid credentials" });
     } else {
-      const token = jwt.sign({ email: user.email }, "secret", { expiresIn: "1h" });
+      const token = jwt.sign({ id: user._id }, process.env.SECRET);
       res.cookie("token", token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
@@ -51,6 +51,10 @@ const login = async (req, res) => {
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
+};
+
+const createPostPage = async (req, res) => {
+  console.log("hiii");
 };
 
 module.exports = { signup, login };

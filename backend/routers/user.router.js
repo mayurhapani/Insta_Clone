@@ -1,11 +1,10 @@
 const { Router } = require("express");
-const { signup, login } = require("../controllers/user.controller");
+const { signup, login, createPostPage } = require("../controllers/user.controller");
+const { isAuth } = require("../middlewares/isAuth.middleware");
 const uRouter = Router();
 
-uRouter.get("/", (req, res) => {
-  res.send("hi");
-});
 uRouter.post("/signup", signup);
 uRouter.post("/signin", login);
+uRouter.get("/createPost", isAuth, createPostPage);
 
 module.exports = uRouter;
