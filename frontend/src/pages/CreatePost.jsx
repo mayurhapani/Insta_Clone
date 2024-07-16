@@ -18,7 +18,7 @@ export default function CreatePost() {
       <div className="pt-32 flex flex-col items-center">
         <div className="max-w-80 border border-[rgb(173, 173, 173)] rounded-sm">
           {/* header */}
-          <div className="flex px-2 border border-[rgb(173, 173, 173)]">
+          <div className="flex p-2 border border-[rgb(173, 173, 173)]">
             <h1 className="w-full text-center font-bold">Create New Post</h1>
             <button className="font-bold text-blue-600 text-sm">Share</button>
           </div>

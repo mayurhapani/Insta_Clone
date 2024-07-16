@@ -57,4 +57,4 @@ const createPostPage = async (req, res) => {
   console.log("hiii");
 };
 
-module.exports = { signup, login };
+module.exports = { signup, login, createPostPage };
