@@ -33,7 +33,7 @@ export default function CreatePost() {
 
       // data send to backend
       const response = await axios.post(
-        "http://localhost:8001/createPost",
+        "http://localhost:8001/post/createPost",
         {
           disc: disc,
           image: uploadedImagePath,

@@ -1,7 +1,7 @@
 const userModel = require("../models/user.model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const postModel = require("../models/post.model");
+const { extractPublicId, deleteImageByUrl } = require("../public/javascripts/image_functions");
 
 const signup = async (req, res) => {
   try {
@@ -53,21 +53,4 @@ const login = async (req, res) => {
   }
 };
 
-const createPostPage = async (req, res) => {
-  console.log("hiii");
-};
-const createPost = async (req, res) => {
-  try {
-    const { disc, image } = req.body;
-    if (!image || !disc) return res.status(422).json({ message: "Fill all the inputs" });
-    const user = req.user._id;
-    console.log(user);
-
-    await postModel.create({ disc, image, user });
-    return res.status(201).json({ message: "Post Created Successfully" });
-  } catch (error) {
-    return res.status(500).json({ message: error.message });
-  }
-};
-
-module.exports = { signup, login, createPostPage, createPost };
+module.exports = { signup, login };

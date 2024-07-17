@@ -17,6 +17,11 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  image: {
+    type: String,
+    default:
+      "https://res.cloudinary.com/instaclone21/image/upload/v1721210287/users/u0qrfanxqztl61j37odp.png",
+  },
 });
 
 const userModel = mongoose.model("USER", userSchema);

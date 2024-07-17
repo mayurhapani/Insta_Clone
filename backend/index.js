@@ -5,6 +5,7 @@ const db = require("./config/database");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const uRouter = require("./routers/user.router");
+const pRouter = require("./routers/post.router");
 
 require("dotenv").config();
 
@@ -14,11 +15,13 @@ app.use(
     credentials: true,
   })
 );
+app.use("/public", express.static(path.join(__dirname, "public")));
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/", uRouter);
+app.use("/post", pRouter);
 
 app.listen(process.env.PORT || 0, () => {
   db();
