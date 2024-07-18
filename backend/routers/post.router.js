@@ -10,6 +10,6 @@ const {
 
 pRouter.get("/getPosts", getPosts);
 pRouter.post("/createPost", isAuth, createPost);
-pRouter.post("/deletePost/:id", isAuth, deletePost);
+pRouter.get("/deletePost/:id", isAuth, deletePost);
 
 module.exports = pRouter;

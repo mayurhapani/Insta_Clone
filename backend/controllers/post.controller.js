@@ -35,7 +35,7 @@ const deletePost = async (req, res) => {
 
     // Delete post and image
     await postModel.findByIdAndDelete(id);
-    await deleteImageByUrl(publicId);
+    await deleteImageByUrl(`posts/${publicId}`, res);
 
     return res.status(200).json({ message: "Post and image deleted successfully" });
   } catch (error) {

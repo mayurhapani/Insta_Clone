@@ -1,5 +1,34 @@
+import { useEffect, useState } from "react";
 import img1 from "../assets/images/demo_user.png";
+import axios from "axios";
+import { toast } from "react-toastify";
+
 export default function Profile() {
+  const [user, setUser] = useState([]);
+
+  // console.log(user);
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await axios.get("http://localhost:8001/getUser", {
+          withCredentials: true,
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        });
+        setUser(response.data.user);
+      } catch (error) {
+        if (error.response) {
+          toast.error(error.response.data.message);
+        } else {
+          toast.error(error.message);
+        }
+      }
+    };
+
+    fetchUser();
+  }, []);
+
   return (
     <div className="container mx-auto ">
       <div className="pt-32 flex flex-col items-center w-1/2 mx-auto">
@@ -8,11 +37,11 @@ export default function Profile() {
           <div className="flex items-center">
             <img
               className="rounded-full w-32 h-32"
-              src="https://via.placeholder.com/150"
-              alt="User Avatar"
+              src={user.image}
+              alt="https://via.placeholder.com/150"
             />
             <div className="ps-5">
-              <h1 className="text-3xl font-bold text-center mb-5 ">John Doe</h1>
+              <h1 className="text-3xl font-bold text-center mb-5 ">{user.username}</h1>
               <div className="flex items-center">
                 <p className="text-sm text-gray-600 font-semibold me-4">
                   <span>40</span> Posts
