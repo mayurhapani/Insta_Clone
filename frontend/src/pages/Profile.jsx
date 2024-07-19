@@ -1,13 +1,21 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import img1 from "../assets/images/demo_user.png";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { loginContext } from "../context/LoginContext";
+import { useNavigate } from "react-router-dom";
 
 export default function Profile() {
   const [user, setUser] = useState([]);
+  const { isLoggedIn } = useContext(loginContext);
+  const navigate = useNavigate();
 
   // console.log(user);
   useEffect(() => {
+    if (!isLoggedIn) {
+      navigate("/signin");
+    }
+
     const fetchUser = async () => {
       try {
         const response = await axios.get("http://localhost:8001/getUser", {
@@ -27,7 +35,7 @@ export default function Profile() {
     };
 
     fetchUser();
-  }, []);
+  }, [navigate, isLoggedIn]);
 
   return (
     <div className="container mx-auto ">

@@ -62,5 +62,13 @@ const getUser = async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 };
+const logout = async (req, res) => {
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+  });
+  res.status(200).json({ message: "Logged out successfully" });
+};
 
-module.exports = { signup, login, getUser };
+module.exports = { signup, login, getUser, logout };

@@ -1,12 +1,15 @@
+import { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/images/logo.png";
 import { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { loginContext } from "../context/LoginContext";
 
 export default function Signin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { setIsLoggedIn } = useContext(loginContext);
   const navigate = useNavigate();
 
   const notify1 = (msg) => toast.error(msg);
@@ -45,6 +48,7 @@ export default function Signin() {
         console.log(response);
         const token = response.data.token;
         localStorage.setItem("token", token);
+        setIsLoggedIn(true);
         notify2(response.data.message);
         navigate("/");
       } else {

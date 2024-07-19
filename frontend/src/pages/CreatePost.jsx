@@ -1,14 +1,44 @@
+import { useEffect, useState, useContext } from "react";
 import axios from "axios";
-import img1 from "../assets/images/demo_user.png";
-import { useState } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { loginContext } from "../context/LoginContext";
+
+import img1 from "../assets/images/demo_user.png";
 
 export default function CreatePost() {
   const [image, setImage] = useState(null);
   const [disc, setDisc] = useState("");
-
+  const [user, setUser] = useState([]);
+  const { isLoggedIn } = useContext(loginContext);
   const navigate = useNavigate();
+
+  // console.log(user);
+  useEffect(() => {
+    if (!isLoggedIn) {
+      navigator("/signin");
+    }
+
+    const fetchUser = async () => {
+      try {
+        const response = await axios.get("http://localhost:8001/getUser", {
+          withCredentials: true,
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        });
+        setUser(response.data.user);
+      } catch (error) {
+        if (error.response) {
+          toast.error(error.response.data.message);
+        } else {
+          toast.error(error.message);
+        }
+      }
+    };
+
+    fetchUser();
+  }, []);
 
   const notify1 = (msg) => toast.error(msg);
   const notify2 = (msg) => toast.success(msg);
@@ -18,6 +48,12 @@ export default function CreatePost() {
   const shareData = async () => {
     try {
       const token = localStorage.getItem("token");
+
+      if (!image || !disc) {
+        notify1("image or disc missing");
+        navigate("/");
+        return;
+      }
 
       // image upload
       const dataImage = new FormData();
@@ -118,8 +154,8 @@ export default function CreatePost() {
 
           {/* content */}
           <div className="flex items-center p-1">
-            <img className="w-7 rounded-full" src={img1} alt="" />
-            <span className="ms-3 text-sm font-bold">User Name</span>
+            <img className="w-7 rounded-full" src={user.image} alt="" />
+            <span className="ms-3 text-sm font-bold">{user.username}</span>
           </div>
           <textarea
             className="w-full p-2 outline-none"

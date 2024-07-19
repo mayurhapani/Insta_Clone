@@ -1,12 +1,20 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { loginContext } from "../context/LoginContext";
+import { useNavigate } from "react-router-dom";
 
 export default function Home() {
   const [posts, setPosts] = useState([]);
+  const { isLoggedIn } = useContext(loginContext);
+  const navigate = useNavigate();
 
-  // console.log(posts);
   useEffect(() => {
+    if (!isLoggedIn) {
+      navigate("/signin");
+    }
+
+    // Fetch posts when component mounts
     const fetchPosts = async () => {
       try {
         const response = await axios.get("http://localhost:8001/post/getPosts", {
@@ -26,14 +34,14 @@ export default function Home() {
     };
 
     fetchPosts();
-  }, []);
+  }, [navigate, isLoggedIn]);
 
   return (
     <div className="container mx-auto ">
       <div className="pt-32 flex flex-col items-center">
         <div className="max-w-[22rem] rounded-sm">
           {posts.length > 0 ? (
-            posts.map((post, index) => (
+            posts.reverse().map((post, index) => (
               <div key={index} className="card border border-[rgb(173, 173, 173)] rounded-sm mb-1">
                 {/* card header */}
                 <div className="flex justify-start items-center p-2">
