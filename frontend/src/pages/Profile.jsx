@@ -2,18 +2,24 @@ import { useEffect, useState, useContext } from "react";
 import img1 from "../assets/images/demo_user.png";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { loginContext } from "../context/LoginContext";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthProvider";
+import Cookies from "universal-cookie";
+
+const cookies = new Cookies();
 
 export default function Profile() {
   const [user, setUser] = useState([]);
-  const { isLoggedIn } = useContext(loginContext);
+  const { isLoggedIn } = useContext(AuthContext);
   const navigate = useNavigate();
 
   // console.log(user);
   useEffect(() => {
-    if (!isLoggedIn) {
+    const token = localStorage.getItem("token") || cookies.get("token");
+
+    if (!token) {
       navigate("/signin");
+      return;
     }
 
     const fetchUser = async () => {

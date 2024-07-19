@@ -2,21 +2,27 @@ import { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { loginContext } from "../context/LoginContext";
 
 import img1 from "../assets/images/demo_user.png";
+import { AuthContext } from "../context/AuthProvider";
+import Cookies from "universal-cookie";
+
+const cookies = new Cookies();
 
 export default function CreatePost() {
   const [image, setImage] = useState(null);
   const [disc, setDisc] = useState("");
   const [user, setUser] = useState([]);
-  const { isLoggedIn } = useContext(loginContext);
+  const { isLoggedIn } = useContext(AuthContext);
   const navigate = useNavigate();
 
   // console.log(user);
   useEffect(() => {
-    if (!isLoggedIn) {
-      navigator("/signin");
+    const token = localStorage.getItem("token") || cookies.get("token");
+
+    if (!token) {
+      navigate("/signin");
+      return;
     }
 
     const fetchUser = async () => {
@@ -38,7 +44,7 @@ export default function CreatePost() {
     };
 
     fetchUser();
-  }, []);
+  }, [isLoggedIn, navigate]);
 
   const notify1 = (msg) => toast.error(msg);
   const notify2 = (msg) => toast.success(msg);

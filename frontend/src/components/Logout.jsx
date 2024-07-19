@@ -1,11 +1,11 @@
 import { useContext, useEffect } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { loginContext } from "../context/LoginContext";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthProvider";
 
 export default function Logout() {
-  const { setIsLoggedIn } = useContext(loginContext);
+  const { setIsLoggedIn } = useContext(AuthContext);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -13,10 +13,11 @@ export default function Logout() {
 
     const logout = async () => {
       try {
+        const token = localStorage.getItem("token");
         const response = await axios.get("http://localhost:8001/logout", {
           withCredentials: true,
           headers: {
-            Authorization: "Bearer " + localStorage.getItem("token"),
+            Authorization: "Bearer " + token,
           },
         });
 

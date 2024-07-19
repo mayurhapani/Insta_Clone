@@ -1,15 +1,17 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/images/logo.png";
-import { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { loginContext } from "../context/LoginContext";
+import Cookies from "universal-cookie";
+import { AuthContext } from "../context/AuthProvider";
+
+const cookies = new Cookies();
 
 export default function Signin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { setIsLoggedIn } = useContext(loginContext);
+  const { setIsLoggedIn } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const notify1 = (msg) => toast.error(msg);
@@ -22,7 +24,6 @@ export default function Signin() {
   const loginData = async (e) => {
     e.preventDefault();
 
-    e.preventDefault();
     if (!emailRegex.test(email)) {
       notify1("Invalid email format");
       return;
@@ -45,8 +46,9 @@ export default function Signin() {
       );
 
       if (response.status === 200) {
-        console.log(response);
+        // console.log(response);
         const token = response.data.token;
+        cookies.set("token", token, { path: "/" });
         localStorage.setItem("token", token);
         setIsLoggedIn(true);
         notify2(response.data.message);

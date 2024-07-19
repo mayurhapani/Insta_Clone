@@ -1,13 +1,13 @@
 import { Link } from "react-router-dom";
 import logo from "../assets/images/logo.png";
 import { useContext } from "react";
-import { loginContext } from "../context/LoginContext";
+import { AuthContext } from "../context/AuthProvider";
 
 export default function Header() {
-  const { isLoggedIn } = useContext(loginContext);
+  const { isLoggedIn } = useContext(AuthContext);
 
   return (
-    <div className=" bg-transparent fixed top-0 left-0 right-0">
+    <div className=" bg-white fixed top-0 left-0 right-0">
       <div className="container mx-auto">
         <div className="flex justify-between items-center">
           <img className="w-40" src={logo} alt="" />

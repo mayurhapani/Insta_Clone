@@ -3,6 +3,7 @@ import "./App.css";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { AuthProvider } from "./context/AuthProvider";
 
 import Header from "./components/Header";
 import Signup from "./pages/Signup";
@@ -10,17 +11,13 @@ import Signin from "./pages/Signin";
 import Profile from "./pages/Profile";
 import Home from "./pages/Home";
 import CreatePost from "./pages/CreatePost";
-import { useState } from "react";
-import { loginContext } from "./context/LoginContext";
 import Logout from "./components/Logout";
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
   return (
     <>
       <BrowserRouter>
-        <loginContext.Provider value={{ isLoggedIn, setIsLoggedIn }}>
+        <AuthProvider>
           <Header />
           <Routes>
             <Route path="/" element={<Home />} />
@@ -31,8 +28,7 @@ function App() {
             <Route path="/logout" element={<Logout />} />
           </Routes>
           <ToastContainer />
-        </loginContext.Provider>
-        ;
+        </AuthProvider>
       </BrowserRouter>
     </>
   );
