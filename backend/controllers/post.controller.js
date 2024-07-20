@@ -43,4 +43,22 @@ const deletePost = async (req, res) => {
   }
 };
 
-module.exports = { createPost, deletePost, getPosts };
+const likePost = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const post = await postModel.findOne({ _id: req.params.id });
+
+    if (post.likes.indexOf(req.user._id) === -1) {
+      post.likes.push(req.user._id);
+      await post.save();
+      return res.status(200).json({ Like: true, message: "Liked Done" });
+    } else {
+      post.likes.splice(post.likes.indexOf(req.user._id), 1);
+      await post.save();
+      return res.status(200).json({ Like: false, message: "Unlike Done" });
+    }
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+module.exports = { createPost, deletePost, getPosts, likePost };

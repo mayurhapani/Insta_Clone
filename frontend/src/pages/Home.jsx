@@ -9,6 +9,7 @@ import Cookies from "universal-cookie";
 const cookies = new Cookies();
 
 export default function Home() {
+  const [user, setUser] = useState([]);
   const [posts, setPosts] = useState([]);
   const { isLoggedIn } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -41,6 +42,26 @@ export default function Home() {
       }
     };
 
+    const fetchUser = async () => {
+      try {
+        const response = await axios.get("http://localhost:8001/getUser", {
+          withCredentials: true,
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        });
+        setUser(response.data.user);
+      } catch (error) {
+        if (error.response) {
+          toast.error(error.response.data.message);
+        } else {
+          toast.error(error.message);
+        }
+      }
+    };
+
+    fetchUser();
+
     fetchPosts();
   }, [navigate, isLoggedIn]);
 
@@ -49,7 +70,7 @@ export default function Home() {
       <div className="pt-32 flex flex-col items-center">
         <div className="max-w-[22rem] rounded-sm">
           {posts.length > 0 ? (
-            posts.reverse().map((post, index) => <BlogCard post={post} key={index} />)
+            posts.reverse().map((post, index) => <BlogCard post={post} user={user} key={index} />)
           ) : (
             <p>No posts available</p>
           )}
