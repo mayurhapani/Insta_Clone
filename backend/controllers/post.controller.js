@@ -3,7 +3,7 @@ const { extractPublicId, deleteImageByUrl } = require("../public/javascripts/ima
 
 const getPosts = async (req, res) => {
   try {
-    const posts = await postModel.find({}).populate("user");
+    const posts = await postModel.find({}).populate("user", "username image");
     return res.json(posts);
   } catch (error) {
     return res.status(500).json({ message: error.message });

@@ -1,5 +1,4 @@
 import { useEffect, useState, useContext } from "react";
-import img1 from "../assets/images/demo_user.png";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -10,6 +9,7 @@ const cookies = new Cookies();
 
 export default function Profile() {
   const [user, setUser] = useState([]);
+  const [myPost, setMyPost] = useState([]);
   const { isLoggedIn } = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -31,6 +31,7 @@ export default function Profile() {
           },
         });
         setUser(response.data.user);
+        setMyPost(response.data.myPost);
       } catch (error) {
         if (error.response) {
           toast.error(error.response.data.message);
@@ -58,7 +59,7 @@ export default function Profile() {
               <h1 className="text-3xl font-bold text-center mb-5 ">{user.username}</h1>
               <div className="flex items-center">
                 <p className="text-sm text-gray-600 font-semibold me-4">
-                  <span>40</span> Posts
+                  <span>{myPost.length || 0}</span> Posts
                 </p>
                 <p className="text-sm text-gray-600 font-semibold me-4">
                   <span>40</span> Followers
@@ -75,36 +76,13 @@ export default function Profile() {
 
         {/* posts */}
         <div className=" flex flex-wrap">
-          <div className="w-1/3 p-1 ">
-            <div className="border border-gray-300">
-              <img className="w-full h-full" src={img1} alt="" />
+          {myPost.map((post) => (
+            <div key={post._id} className="w-1/3 p-1 ">
+              <div className="border border-gray-300 w-full aspect-square">
+                <img className="w-full h-full" src={post.image} alt="" />
+              </div>
             </div>
-          </div>
-          <div className="w-1/3 p-1 ">
-            <div className="border border-gray-300">
-              <img className="w-full h-full" src={img1} alt="" />
-            </div>
-          </div>
-          <div className="w-1/3 p-1 ">
-            <div className="border border-gray-300">
-              <img className="w-full h-full" src={img1} alt="" />
-            </div>
-          </div>
-          <div className="w-1/3 p-1 ">
-            <div className="border border-gray-300">
-              <img className="w-full h-full" src={img1} alt="" />
-            </div>
-          </div>
-          <div className="w-1/3 p-1 ">
-            <div className="border border-gray-300">
-              <img className="w-full h-full" src={img1} alt="" />
-            </div>
-          </div>
-          <div className="w-1/3 p-1 ">
-            <div className="border border-gray-300">
-              <img className="w-full h-full" src={img1} alt="" />
-            </div>
-          </div>
+          ))}
         </div>
       </div>
     </div>

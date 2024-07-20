@@ -12,6 +12,7 @@ export default function Home() {
   const [posts, setPosts] = useState([]);
   const { isLoggedIn } = useContext(AuthContext);
   const navigate = useNavigate();
+  // console.log(posts);
 
   useEffect(() => {
     const token = localStorage.getItem("token") || cookies.get("token");

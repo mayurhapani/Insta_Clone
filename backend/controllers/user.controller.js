@@ -2,6 +2,7 @@ const userModel = require("../models/user.model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { extractPublicId, deleteImageByUrl } = require("../public/javascripts/image_functions");
+const postModel = require("../models/post.model");
 
 const signup = async (req, res) => {
   try {
@@ -56,12 +57,14 @@ const login = async (req, res) => {
 const getUser = async (req, res) => {
   try {
     const user = req.user;
-    // console.log(user);
-    return res.status(200).json({ user, message: "Welcome to profile" });
+    const myPost = await postModel.find({ user: user._id });
+    // console.log(myPost);
+    return res.status(200).json({ user, myPost, message: "Welcome to profile" });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
 };
+
 const logout = async (req, res) => {
   res.clearCookie("token", {
     httpOnly: true,
