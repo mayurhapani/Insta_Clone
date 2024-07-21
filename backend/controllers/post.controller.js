@@ -3,8 +3,25 @@ const { extractPublicId, deleteImageByUrl } = require("../public/javascripts/ima
 
 const getPosts = async (req, res) => {
   try {
-    const posts = await postModel.find({}).populate("user", "username image");
+    const posts = await postModel
+      .find({})
+      .populate("user", "username image")
+      .populate("comments.user", "username");
     return res.json(posts);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+const getMyPost = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const post = await postModel
+      .findById(id)
+      .populate("user", "username image")
+      .populate("comments.user", "username");
+
+    return res.json(post);
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
@@ -75,4 +92,4 @@ const addComment = async (req, res) => {
   }
 };
 
-module.exports = { createPost, deletePost, getPosts, likePost, addComment };
+module.exports = { createPost, deletePost, getPosts, getMyPost, likePost, addComment };

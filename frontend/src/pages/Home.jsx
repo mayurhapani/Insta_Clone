@@ -11,11 +11,14 @@ const cookies = new Cookies();
 export default function Home() {
   const [user, setUser] = useState([]);
   const [posts, setPosts] = useState([]);
-  const { isLoggedIn, myPost, setMyPost, viewMyPost, setViewMyPost } = useContext(AuthContext);
+  const [myPost, setMyPost] = useState({});
   const [comment, setComment] = useState("");
+  const [viewMyPost, setViewMyPost] = useState(false);
+  const [newCommentAdd, setNewCommentAdd] = useState(false);
+
+  const { isLoggedIn, myPostId, setMyPostId } = useContext(AuthContext);
   const navigate = useNavigate();
-  console.log(posts);
-  console.log(viewMyPost);
+  // console.log(posts);
 
   useEffect(() => {
     const token = localStorage.getItem("token") || cookies.get("token");
@@ -64,34 +67,60 @@ export default function Home() {
 
     fetchUser();
     fetchPosts();
-  }, [navigate, isLoggedIn]);
+  }, [navigate, isLoggedIn, viewMyPost]);
 
-  // useEffect(() => {}, [viewMyPost]);
+  // get my post
+  useEffect(() => {
+    if (!myPostId) {
+      return;
+    }
+    const fetchMyPosts = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8001/post/getMyPosts/${myPostId}`, {
+          withCredentials: true,
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        });
+        setMyPost(response.data);
+        setViewMyPost(true);
+      } catch (error) {
+        if (error.response) {
+          toast.error(error.response.data.message);
+        } else {
+          toast.error(error.message);
+        }
+      }
+    };
+
+    fetchMyPosts();
+  }, [myPostId, viewMyPost, newCommentAdd]);
 
   // add comments
   const addComment = async (post) => {
-    console.log(post);
-    // try {
-    //   const response = await axios.post(
-    //     `http://localhost:8001/post/addComment/${post._id}`,
-    //     { comment },
-    //     {
-    //       withCredentials: true,
-    //       headers: {
-    //         Authorization: "Bearer " + localStorage.getItem("token"),
-    //       },
-    //     }
-    //   );
-    //   setComment("");
-    //   setMyPost({});
-    //   toast.success(response.data.message);
-    // } catch (error) {
-    //   if (error.response) {
-    //     toast.error(error.response.data.message);
-    //   } else {
-    //     toast.error(error.message);
-    //   }
-    // }
+    // console.log(post);
+
+    try {
+      const response = await axios.post(
+        `http://localhost:8001/post/addComment/${post._id}`,
+        { comment },
+        {
+          withCredentials: true,
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        }
+      );
+      setComment("");
+      setNewCommentAdd(true);
+      toast.success(response.data.message);
+    } catch (error) {
+      if (error.response) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error(error.message);
+      }
+    }
   };
 
   return (
@@ -108,34 +137,26 @@ export default function Home() {
         </div>
       </div>
       {viewMyPost && (
-        <div className=" fixed w-screen h-screen top-0 left-0 bg-[rgba(27,28,24,0.34)]">
-          <div className="w-[80%] min-h-[250px] mx-h-[80%]  mt-[10%] mx-auto bg-white flex">
+        <div className=" fixed w-screen h-screen top-0 left-0 bottom-0 bg-[rgba(27,28,24,0.34)]">
+          <div className="w-[80%] h-[70%]  mt-[10%] mx-auto bg-white flex">
             <div className="w-full">
-              <img
-                className="w-full h-full aspect-auto"
-                src="https://img.freepik.com/free-photo/abstract-autumn-beauty-multi-colored-leaf-vein-pattern-generated-by-ai_188544-9871.jpg?size=626&ext=jpg&ga=GA1.1.2008272138.1721347200&semt=ais_user"
-                alt=""
-              />
+              <img className="w-full h-full aspect-auto" src={myPost.image} alt="" />
             </div>
             <div className="flex flex-col w-full">
               {/* card header */}
               <div className="flex justify-start items-center p-2 border-b-2 h-[12%]">
-                {/* <img className="w-[40px] rounded-full me-5" src={post.user.image} alt="" /> */}
-                {/* <span className="font-semibold">@ {post.user.username}</span> */}
-                <img
-                  className="w-[40px] rounded-full me-5"
-                  src="https://img.freepik.com/free-photo/abstract-autumn-beauty-multi-colored-leaf-vein-pattern-generated-by-ai_188544-9871.jpg?size=626&ext=jpg&ga=GA1.1.2008272138.1721347200&semt=ais_user"
-                  alt=""
-                />
-                <span className="font-semibold">@ mayur</span>
+                <img className="w-[40px] rounded-full me-5" src={myPost.user.image} alt="" />
+                <span className="font-semibold">@ {myPost.user.username}</span>
               </div>
 
               {/* comment section */}
-              <div className="h-[76%]">
-                <p className="p-2">
-                  <span className="font-bold me-2">@ mayur : </span>
-                  hi this is mayur
-                </p>
+              <div className="h-[76%] overflow-y-scroll">
+                {myPost.comments.map((comment, index) => (
+                  <p className="p-2" key={index}>
+                    <span className="font-bold me-2">@ {comment.user.username} : </span>
+                    {comment.comment}
+                  </p>
+                ))}
               </div>
 
               {/* comment form */}
@@ -161,7 +182,15 @@ export default function Home() {
               </div>
             </div>
           </div>
-          <div className=" fixed top-5 right-5 cursor-pointer" onClick={() => setViewMyPost(false)}>
+
+          {/* close comment section */}
+          <div
+            className=" fixed top-5 right-5 cursor-pointer"
+            onClick={() => {
+              setViewMyPost(false);
+              setMyPostId("");
+            }}
+          >
             <span className="material-symbols-outlined text-white text-4xl font-bold">close</span>
           </div>
         </div>

@@ -8,7 +8,8 @@ export default function BlogCard({ post, user }) {
   const [isLiked, setIsLiked] = useState(post.likes.includes(user._id));
   const [likesCount, setLikesCount] = useState(post.likes.length);
   const [comment, setComment] = useState("");
-  const { setMyPost, setViewMyPost } = useContext(AuthContext);
+  const [commentCount, setCommentCount] = useState(post.comments.length);
+  const { myPostId, setMyPostId } = useContext(AuthContext);
 
   const likePost = async () => {
     try {
@@ -50,6 +51,7 @@ export default function BlogCard({ post, user }) {
         }
       );
       setComment("");
+      setCommentCount(commentCount + 1);
       toast.success(response.data.message);
     } catch (error) {
       if (error.response) {
@@ -60,7 +62,7 @@ export default function BlogCard({ post, user }) {
     }
   };
 
-  useEffect(() => {}, [isLiked, likesCount, comment]);
+  useEffect(() => {}, [isLiked, likesCount, myPostId, commentCount]);
 
   return (
     <div className="card border border-[rgb(173, 173, 173)] rounded-sm mb-1">
@@ -108,16 +110,17 @@ export default function BlogCard({ post, user }) {
         <p>@ {post.disc}</p>
       </div>
 
-      {/* add comments */}
+      {/* show comments */}
       <p
         className="font-bold cursor-pointer ms-2 text-sm"
         onClick={() => {
-          setMyPost(post);
-          setViewMyPost(true);
+          setMyPostId(post._id);
         }}
       >
-        Show All {post.comments.length} Comments
+        Show All {commentCount} Comments
       </p>
+
+      {/* add comments */}
       <div className="flex items-center">
         <span className="material-symbols-outlined">mood</span>
         <input

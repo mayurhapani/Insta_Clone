@@ -3,13 +3,15 @@ const { isAuth } = require("../middlewares/isAuth.middleware");
 const pRouter = Router();
 const {
   getPosts,
+  getMyPost,
   createPost,
   deletePost,
   likePost,
   addComment,
 } = require("../controllers/post.controller");
 
-pRouter.get("/getPosts", getPosts);
+pRouter.get("/getPosts", isAuth, getPosts);
+pRouter.get("/getMyPosts/:id", isAuth, getMyPost);
 
 pRouter.post("/createPost", isAuth, createPost);
 pRouter.get("/deletePost/:id", isAuth, deletePost);
