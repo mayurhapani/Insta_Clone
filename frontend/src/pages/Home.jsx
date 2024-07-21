@@ -15,6 +15,7 @@ export default function Home() {
   const [comment, setComment] = useState("");
   const [viewMyPost, setViewMyPost] = useState(false);
   const [newCommentAdd, setNewCommentAdd] = useState(false);
+  const [delComment, setDelComment] = useState(false);
 
   const { isLoggedIn, myPostId, setMyPostId } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -93,7 +94,7 @@ export default function Home() {
     };
 
     fetchMyPosts();
-  }, [myPostId, viewMyPost, newCommentAdd]);
+  }, [myPostId, viewMyPost, newCommentAdd, delComment]);
 
   // add comments
   const addComment = async (post) => {
@@ -120,6 +121,30 @@ export default function Home() {
     }
   };
 
+  const deleteComment = async (commentId, postId) => {
+    try {
+      const response = await axios.delete(`http://localhost:8001/post/deleteComment`, {
+        params: {
+          commentId,
+          postId,
+        },
+        withCredentials: true,
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      });
+      toast.success(response.data.message);
+      setDelComment(true);
+      // navigate("/");
+    } catch (error) {
+      if (error.response) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error(error.message);
+      }
+    }
+  };
+
   return (
     <div className="">
       <div className="container mx-auto ">
@@ -135,6 +160,8 @@ export default function Home() {
                     key={index}
                     newCommentAdd={newCommentAdd}
                     setNewCommentAdd={setNewCommentAdd}
+                    delComment={delComment}
+                    setDelComment={setDelComment}
                   />
                 ))
             ) : (
@@ -145,7 +172,7 @@ export default function Home() {
       </div>
       {viewMyPost && (
         <div className=" fixed w-screen h-screen top-0 left-0 bottom-0 bg-[rgba(27,28,24,0.34)]">
-          <div className="w-[80%] h-[70%]  mt-[10%] mx-auto bg-white flex">
+          <div className="w-[80%] xl:w-[60%] h-[70%]  mt-[8%] mx-auto bg-white flex">
             <div className="w-full">
               <img className="w-full h-full aspect-auto" src={myPost.image} alt="" />
             </div>
@@ -159,10 +186,23 @@ export default function Home() {
               {/* comment section */}
               <div className="h-[76%] overflow-y-scroll">
                 {myPost.comments.map((comment, index) => (
-                  <p className="p-2" key={index}>
-                    <span className="font-bold me-2">@ {comment.user.username} : </span>
-                    {comment.comment}
-                  </p>
+                  <div className="p-2 flex items-center justify-between" key={index}>
+                    <p className="">
+                      <span className="font-bold me-2">@ {comment.user.username} : </span>
+                      {comment.comment}
+                    </p>
+                    <div
+                      className="cursor-pointer"
+                      onClick={() => {
+                        setDelComment(true);
+                        deleteComment(comment._id, myPost._id);
+                      }}
+                    >
+                      <span className="material-symbols-outlined text-red-800 text-lg font-bold">
+                        close
+                      </span>
+                    </div>
+                  </div>
                 ))}
               </div>
 

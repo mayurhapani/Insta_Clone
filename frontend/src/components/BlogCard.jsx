@@ -4,7 +4,14 @@ import { toast } from "react-toastify";
 import { useState, useEffect, useContext } from "react";
 import { AuthContext } from "../context/AuthProvider";
 
-export default function BlogCard({ post, user, newCommentAdd, setNewCommentAdd }) {
+export default function BlogCard({
+  post,
+  user,
+  newCommentAdd,
+  setNewCommentAdd,
+  delComment,
+  setDelComment,
+}) {
   const [isLiked, setIsLiked] = useState(post.likes.includes(user._id));
   const [likesCount, setLikesCount] = useState(post.likes.length);
   const [comment, setComment] = useState("");
@@ -62,18 +69,25 @@ export default function BlogCard({ post, user, newCommentAdd, setNewCommentAdd }
     }
   };
 
-  useEffect(() => {}, [isLiked, likesCount, myPostId, commentCount]);
-
   useEffect(() => {
-    if (!newCommentAdd) {
-      return;
-    }
+    // if (!newCommentAdd) {
+    //   return;
+    // }
 
-    if (myPostId == post._id) {
+    console.log("delComment", delComment);
+
+    if (myPostId == post._id && newCommentAdd) {
       setCommentCount(commentCount + 1);
       setNewCommentAdd(false);
     }
-  }, [newCommentAdd]);
+
+    if (myPostId == post._id && delComment) {
+      setCommentCount(commentCount - 1);
+      setDelComment(false);
+    }
+  }, [newCommentAdd, delComment]);
+
+  useEffect(() => {}, [isLiked, likesCount, myPostId, commentCount]);
 
   return (
     <div className="card border border-[rgb(173, 173, 173)] rounded-sm mb-1">
@@ -173,4 +187,6 @@ BlogCard.propTypes = {
   }).isRequired,
   newCommentAdd: PropTypes.bool.isRequired,
   setNewCommentAdd: PropTypes.func.isRequired,
+  delComment: PropTypes.bool.isRequired,
+  setDelComment: PropTypes.func.isRequired,
 };

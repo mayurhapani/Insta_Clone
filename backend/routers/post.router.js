@@ -8,6 +8,7 @@ const {
   deletePost,
   likePost,
   addComment,
+  deleteComment,
 } = require("../controllers/post.controller");
 
 pRouter.get("/getPosts", isAuth, getPosts);
@@ -18,5 +19,6 @@ pRouter.get("/deletePost/:id", isAuth, deletePost);
 
 pRouter.get("/like/:id", isAuth, likePost);
 pRouter.post("/addComment/:id", isAuth, addComment);
+pRouter.delete("/deleteComment", isAuth, deleteComment);
 
 module.exports = pRouter;

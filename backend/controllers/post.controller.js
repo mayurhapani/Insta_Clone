@@ -92,4 +92,29 @@ const addComment = async (req, res) => {
   }
 };
 
-module.exports = { createPost, deletePost, getPosts, getMyPost, likePost, addComment };
+const deleteComment = async (req, res) => {
+  try {
+    const { commentId, postId } = req.query;
+    const post = await postModel.findById(postId);
+
+    if (!post) return res.status(404).json({ message: "Post not found" });
+
+    // Filter
+    post.comments = post.comments.filter((comment) => comment._id.toString() !== commentId);
+    await post.save();
+
+    res.status(200).json({ message: "Comment deleted successfully" });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+module.exports = {
+  createPost,
+  deletePost,
+  getPosts,
+  getMyPost,
+  likePost,
+  addComment,
+  deleteComment,
+};
