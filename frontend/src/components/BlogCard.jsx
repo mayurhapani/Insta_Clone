@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import { useState, useEffect, useContext } from "react";
 import { AuthContext } from "../context/AuthProvider";
 
-export default function BlogCard({ post, user }) {
+export default function BlogCard({ post, user, newCommentAdd, setNewCommentAdd }) {
   const [isLiked, setIsLiked] = useState(post.likes.includes(user._id));
   const [likesCount, setLikesCount] = useState(post.likes.length);
   const [comment, setComment] = useState("");
@@ -63,6 +63,17 @@ export default function BlogCard({ post, user }) {
   };
 
   useEffect(() => {}, [isLiked, likesCount, myPostId, commentCount]);
+
+  useEffect(() => {
+    if (!newCommentAdd) {
+      return;
+    }
+
+    if (myPostId == post._id) {
+      setCommentCount(commentCount + 1);
+      setNewCommentAdd(false);
+    }
+  }, [newCommentAdd]);
 
   return (
     <div className="card border border-[rgb(173, 173, 173)] rounded-sm mb-1">
@@ -160,4 +171,6 @@ BlogCard.propTypes = {
   user: PropTypes.shape({
     _id: PropTypes.string.isRequired,
   }).isRequired,
+  newCommentAdd: PropTypes.bool.isRequired,
+  setNewCommentAdd: PropTypes.func.isRequired,
 };

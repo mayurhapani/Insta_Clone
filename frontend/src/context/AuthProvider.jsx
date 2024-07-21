@@ -9,7 +9,6 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [myPostId, setMyPostId] = useState("");
-  // const [viewMyPost, setViewMyPost] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem("token") || cookies.get("token");

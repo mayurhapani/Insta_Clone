@@ -18,7 +18,6 @@ export default function Home() {
 
   const { isLoggedIn, myPostId, setMyPostId } = useContext(AuthContext);
   const navigate = useNavigate();
-  // console.log(posts);
 
   useEffect(() => {
     const token = localStorage.getItem("token") || cookies.get("token");
@@ -67,7 +66,7 @@ export default function Home() {
 
     fetchUser();
     fetchPosts();
-  }, [navigate, isLoggedIn, viewMyPost]);
+  }, [newCommentAdd, navigate, isLoggedIn, viewMyPost]);
 
   // get my post
   useEffect(() => {
@@ -98,8 +97,6 @@ export default function Home() {
 
   // add comments
   const addComment = async (post) => {
-    // console.log(post);
-
     try {
       const response = await axios.post(
         `http://localhost:8001/post/addComment/${post._id}`,
@@ -129,7 +126,17 @@ export default function Home() {
         <div className="pt-32 flex flex-col items-center">
           <div className="max-w-[22rem] rounded-sm">
             {posts.length > 0 ? (
-              posts.reverse().map((post, index) => <BlogCard post={post} user={user} key={index} />)
+              posts
+                .reverse()
+                .map((post, index) => (
+                  <BlogCard
+                    post={post}
+                    user={user}
+                    key={index}
+                    newCommentAdd={newCommentAdd}
+                    setNewCommentAdd={setNewCommentAdd}
+                  />
+                ))
             ) : (
               <p>No posts available</p>
             )}
