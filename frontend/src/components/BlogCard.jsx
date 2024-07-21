@@ -1,11 +1,14 @@
 import PropTypes from "prop-types";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { AuthContext } from "../context/AuthProvider";
 
 export default function BlogCard({ post, user }) {
   const [isLiked, setIsLiked] = useState(post.likes.includes(user._id));
   const [likesCount, setLikesCount] = useState(post.likes.length);
+  const [comment, setComment] = useState("");
+  const { setMyPost, setViewMyPost } = useContext(AuthContext);
 
   const likePost = async () => {
     try {
@@ -16,7 +19,7 @@ export default function BlogCard({ post, user }) {
         },
       });
 
-      // Toggle the like state and update the likes count
+      // Toggle the like state
       if (isLiked) {
         setLikesCount(likesCount - 1);
       } else {
@@ -34,7 +37,30 @@ export default function BlogCard({ post, user }) {
     }
   };
 
-  useEffect(() => {}, [isLiked, likesCount]);
+  const addComment = async (post) => {
+    try {
+      const response = await axios.post(
+        `http://localhost:8001/post/addComment/${post._id}`,
+        { comment },
+        {
+          withCredentials: true,
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        }
+      );
+      setComment("");
+      toast.success(response.data.message);
+    } catch (error) {
+      if (error.response) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error(error.message);
+      }
+    }
+  };
+
+  useEffect(() => {}, [isLiked, likesCount, comment]);
 
   return (
     <div className="card border border-[rgb(173, 173, 173)] rounded-sm mb-1">
@@ -43,12 +69,10 @@ export default function BlogCard({ post, user }) {
         <img className="w-[40px] rounded-full me-5" src={post.user.image} alt="" />
         <span className="font-semibold">@ {post.user.username}</span>
       </div>
-
       {/* card post image */}
       <div className="">
         <img className="w-full h-max" src={post.image} alt="" />
       </div>
-
       {/* card content */}
       <div className="py-2 px-1 flex justify-between items-center border border-[rgb(173, 173, 173)]">
         <div className="">
@@ -79,20 +103,40 @@ export default function BlogCard({ post, user }) {
         <span>likes</span>
       </div>
 
-      {/* comments */}
+      {/* description  */}
       <div className="p-2">
         <p>@ {post.disc}</p>
       </div>
 
       {/* add comments */}
+      <p
+        className="font-bold cursor-pointer ms-2 text-sm"
+        onClick={() => {
+          setMyPost(post);
+          setViewMyPost(true);
+        }}
+      >
+        Show All {post.comments.length} Comments
+      </p>
       <div className="flex items-center">
         <span className="material-symbols-outlined">mood</span>
         <input
           className="outline-none border border-gray-200 p-1 text-sm rounded-lg w-full mx-2"
           type="text"
+          value={comment}
+          onChange={(e) => {
+            setComment(e.target.value);
+          }}
           placeholder="Add Comments..."
         />
-        <button className="px-1 pb-2 text-lg text-blue-800 font-semibold">post</button>
+        <button
+          onClick={() => {
+            addComment(post);
+          }}
+          className="px-1 pb-2 text-lg text-blue-800 font-semibold"
+        >
+          post
+        </button>
       </div>
     </div>
   );
@@ -108,6 +152,7 @@ BlogCard.propTypes = {
     disc: PropTypes.string.isRequired,
     _id: PropTypes.string.isRequired,
     likes: PropTypes.arrayOf(PropTypes.string).isRequired,
+    comments: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   }).isRequired,
   user: PropTypes.shape({
     _id: PropTypes.string.isRequired,

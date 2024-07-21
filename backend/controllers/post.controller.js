@@ -51,14 +51,28 @@ const likePost = async (req, res) => {
     if (post.likes.indexOf(req.user._id) === -1) {
       post.likes.push(req.user._id);
       await post.save();
-      return res.status(200).json({ Like: true, message: "Liked Done" });
+      return res.status(200).json({ Like: true, message: "Liked" });
     } else {
       post.likes.splice(post.likes.indexOf(req.user._id), 1);
       await post.save();
-      return res.status(200).json({ Like: false, message: "Unlike Done" });
+      return res.status(200).json({ Like: false, message: "Unlike" });
     }
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
 };
-module.exports = { createPost, deletePost, getPosts, likePost };
+
+const addComment = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const post = await postModel.findById(id);
+    post.comments.push({ user: req.user._id, comment: req.body.comment });
+    await post.save();
+
+    return res.status(200).json({ message: "Post Done" });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+module.exports = { createPost, deletePost, getPosts, likePost, addComment };
