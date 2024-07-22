@@ -184,24 +184,30 @@ export default function Home() {
 
               {/* comment section */}
               <div className="h-[76%] overflow-y-scroll">
-                {myPost.comments.map((comment, index) => (
-                  <div className="p-2 flex items-center justify-between" key={index}>
-                    <p className="">
-                      <span className="font-bold me-2">@ {comment.user.username} : </span>
-                      {comment.comment}
-                    </p>
-                    <div
-                      className="cursor-pointer"
-                      onClick={() => {
-                        deleteComment(comment._id, myPost._id);
-                      }}
-                    >
-                      <span className="material-symbols-outlined text-red-800 text-lg font-bold">
-                        close
-                      </span>
+                {myPost.comments.length > 0 ? (
+                  myPost.comments.map((comment, index) => (
+                    <div className="p-2 flex items-center justify-between" key={index}>
+                      <p className="">
+                        <span className="font-bold me-2">@ {comment.user.username} : </span>
+                        {comment.comment}
+                      </p>
+                      <div
+                        className="cursor-pointer"
+                        onClick={() => {
+                          deleteComment(comment._id, myPost._id);
+                        }}
+                      >
+                        <span className="material-symbols-outlined text-red-800 text-lg font-bold">
+                          close
+                        </span>
+                      </div>
                     </div>
+                  ))
+                ) : (
+                  <div className="h-full w-full flex justify-center items-center">
+                    <p>No Comments Yet</p>
                   </div>
-                ))}
+                )}
               </div>
 
               {/* comment form */}

@@ -57,7 +57,7 @@ const login = async (req, res) => {
 const getUser = async (req, res) => {
   try {
     const user = req.user;
-    const myPost = await postModel.find({ user: user._id });
+    const myPost = await postModel.find({ user: user._id }).populate("user");
     // console.log(myPost);
     return res.status(200).json({ user, myPost, message: "Welcome to profile" });
   } catch (error) {
