@@ -81,15 +81,17 @@ export default function Profile() {
   // delete post
   const deletePost = async (id) => {
     try {
-      const response = await axios.delete(`http://localhost:8001/post/deletePost/${id}`, {
-        withCredentials: true,
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("token"),
-        },
-      });
-      toast.success(response.data.message);
-      setViewMyPost(false);
-      setMyPostId("");
+      if (window.confirm("Do you want to delete this post")) {
+        const response = await axios.delete(`http://localhost:8001/post/deletePost/${id}`, {
+          withCredentials: true,
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        });
+        toast.success(response.data.message);
+        setViewMyPost(false);
+        setMyPostId("");
+      }
     } catch (error) {
       if (error.response) {
         toast.error(error.response.data.message);
