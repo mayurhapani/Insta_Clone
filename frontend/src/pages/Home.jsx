@@ -135,7 +135,6 @@ export default function Home() {
       });
       toast.success(response.data.message);
       setDelComment(true);
-      // navigate("/");
     } catch (error) {
       if (error.response) {
         toast.error(error.response.data.message);
@@ -194,7 +193,6 @@ export default function Home() {
                     <div
                       className="cursor-pointer"
                       onClick={() => {
-                        setDelComment(true);
                         deleteComment(comment._id, myPost._id);
                       }}
                     >

@@ -70,10 +70,6 @@ export default function BlogCard({
   };
 
   useEffect(() => {
-    // if (!newCommentAdd) {
-    //   return;
-    // }
-
     console.log("delComment", delComment);
 
     if (myPostId == post._id && newCommentAdd) {
@@ -81,9 +77,11 @@ export default function BlogCard({
       setNewCommentAdd(false);
     }
 
-    if (myPostId == post._id && delComment) {
-      setCommentCount(commentCount - 1);
-      setDelComment(false);
+    if (myPostId === post._id && delComment) {
+      if (commentCount > 0) {
+        setCommentCount(commentCount - 1);
+      }
+      setDelComment(false); 
     }
   }, [newCommentAdd, delComment]);
 
