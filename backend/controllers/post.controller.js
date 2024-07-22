@@ -45,10 +45,13 @@ const createPost = async (req, res) => {
 const deletePost = async (req, res) => {
   try {
     const { id } = req.params;
-    const post = await postModel.findById(id);
+    const post = await postModel.findById(id).populate("user", "_id");
 
     if (!post) return res.status(404).json({ message: "Post not found" });
     const publicId = post.image_Id;
+
+    if (req.user._id.toString() != post.user._id.toString())
+      return res.status(404).json({ message: "User Not Authorized" });
 
     // Delete post and image
     await postModel.findByIdAndDelete(id);
