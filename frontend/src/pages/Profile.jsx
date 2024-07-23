@@ -14,8 +14,9 @@ export default function Profile() {
   const [viewMyPost, setViewMyPost] = useState(false);
   const [newCommentAdd, setNewCommentAdd] = useState(false);
   const [delComment, setDelComment] = useState(false);
+  const [user, setUser] = useState({});
 
-  const { isLoggedIn, myPostId, setMyPostId, logInUser } = useContext(AuthContext);
+  const { isLoggedIn, myPostId, setMyPostId } = useContext(AuthContext);
 
   const navigate = useNavigate();
 
@@ -36,7 +37,8 @@ export default function Profile() {
           },
         });
         // setLogInUser(response.data.user);
-        // setUser(response.data.user);
+        setUser(response.data.user);
+        localStorage.setItem("id", response.data.user._id);
         setMyPosts(response.data.myPost);
       } catch (error) {
         if (error.response) {
@@ -159,11 +161,11 @@ export default function Profile() {
             <div className="flex items-center">
               <img
                 className="rounded-full w-32 h-32"
-                src={logInUser.image}
+                src={user.image}
                 alt="https://via.placeholder.com/150"
               />
               <div className="ps-5">
-                <h1 className="text-3xl font-bold text-center mb-5 ">{logInUser.username}</h1>
+                <h1 className="text-3xl font-bold text-center mb-5 ">{user.username}</h1>
                 <div className="flex items-center">
                   <p className="text-sm text-gray-600 font-semibold me-4">
                     <span>{myPosts.length || 0}</span> Posts

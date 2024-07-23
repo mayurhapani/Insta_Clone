@@ -9,7 +9,7 @@ import Cookies from "universal-cookie";
 const cookies = new Cookies();
 
 export default function Home() {
-  const [user, setUser] = useState([]);
+  const [user, setUser] = useState({});
   const [posts, setPosts] = useState([]);
   const [myPost, setMyPost] = useState({});
   const [comment, setComment] = useState("");

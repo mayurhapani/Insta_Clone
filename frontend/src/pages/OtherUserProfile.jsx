@@ -19,14 +19,6 @@ export default function OtherUserProfile() {
   const { logInUser } = useContext(AuthContext);
   const [isFollow, setIsFollow] = useState(false);
 
-  useEffect(() => {
-    if (user && user.followers.includes(logInUser._id)) {
-      setIsFollow(true);
-    } else {
-      setIsFollow(false);
-    }
-  }, [user, logInUser, isFollow]);
-
   //get other user info
   useEffect(() => {
     const fetchUserData = async () => {
@@ -96,7 +88,19 @@ export default function OtherUserProfile() {
     setDelComment(false);
 
     fetchMyPosts();
-  }, [userPostId, viewPost, newCommentAdd, delComment]);
+  }, [userPostId, viewPost, newCommentAdd, delComment, isFollow]);
+
+  useEffect(() => {
+    const checkFollow = () => {
+      if (user && user.followers.includes(localStorage.getItem("id"))) {
+        setIsFollow(true);
+      } else {
+        setIsFollow(false);
+      }
+    };
+
+    checkFollow();
+  }, [user, logInUser, isFollow]);
 
   // delete comments
   const deleteComment = async (commentId, postId) => {
@@ -205,24 +209,26 @@ export default function OtherUserProfile() {
                 <div className="ps-5">
                   <div className="flex justify-between items-center  mb-5">
                     <h1 className="text-3xl font-bold text-center me-4">@ {user.username}</h1>
-                    <button
-                      className="bg-blue-600 text-white rounded-lg py-1 px-3 font-semibold hover:bg-blue-500"
-                      onClick={() => {
-                        isFollow ? unfollowUser(user._id) : followUser(user._id);
-                      }}
-                    >
-                      {isFollow ? "Unfollow" : "Follow"}
-                    </button>
+                    {id != localStorage.getItem("id") && (
+                      <button
+                        className="bg-blue-600 text-white rounded-lg py-1 px-3 font-semibold hover:bg-blue-500"
+                        onClick={() => {
+                          isFollow ? unfollowUser(user._id) : followUser(user._id);
+                        }}
+                      >
+                        {isFollow ? "Unfollow" : "Follow"}
+                      </button>
+                    )}
                   </div>
                   <div className="flex items-center">
                     <p className="text-sm text-gray-600 font-semibold me-4">
                       <span>{posts.length || 0}</span> Posts
                     </p>
                     <p className="text-sm text-gray-600 font-semibold me-4">
-                      <span>40</span> Followers
+                      <span>{user.followers.length || 0}</span> Followers
                     </p>
                     <p className="text-sm text-gray-600 font-semibold">
-                      <span>40</span> Following
+                      <span>{user.following.length || 0}</span> Following
                     </p>
                   </div>
                 </div>
