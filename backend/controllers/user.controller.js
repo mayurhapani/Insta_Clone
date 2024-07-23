@@ -74,4 +74,42 @@ const logout = async (req, res) => {
   res.status(200).json({ message: "Logged out successfully" });
 };
 
-module.exports = { signup, login, getUser, logout };
+const follow = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const otherUser = await userModel.findById(id);
+    if (!otherUser) return res.status(404).json({ message: "User not found" });
+
+    if (otherUser._id.toString() === req.user._id.toString()) {
+      return res.status(400).json({ message: "Cannot follow yourself" });
+    }
+
+    otherUser.followers.push(req.user._id);
+    await otherUser.save();
+
+    return res.status(200).json({ message: "User followed successfully" });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+const unfollow = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const otherUser = await userModel.findById(id);
+    if (!otherUser) return res.status(404).json({ message: "User not found" });
+
+    if (otherUser._id.toString() === req.user._id.toString()) {
+      return res.status(400).json({ message: "Cannot unfollow yourself" });
+    }
+
+    otherUser.followers.splice(req.user._id, 1);
+    await otherUser.save();
+
+    return res.status(200).json({ message: "User unfollowed successfully" });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+module.exports = { signup, login, getUser, logout, follow, unfollow };
