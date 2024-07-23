@@ -58,8 +58,7 @@ const getUser = async (req, res) => {
   try {
     const user = req.user;
     const myPost = await postModel.find({ user: user._id }).populate("user");
-    // console.log(myPost);
-    return res.status(200).json({ user, myPost, message: "Welcome to profile" });
+    return res.status(200).json({ user, myPost });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
@@ -83,9 +82,13 @@ const follow = async (req, res) => {
     if (otherUser._id.toString() === req.user._id.toString()) {
       return res.status(400).json({ message: "Cannot follow yourself" });
     }
-
+    if (otherUser.followers.includes(req.user._id.toString())) {
+      return res.status(400).json({ message: "You are already following this user" }); // This user has already followed this user. This check is added to prevent duplicate followers.  // This check is added to prevent duplicate followers.  // This check is added to prevent duplicate followers.  // This check is added to prevent duplicate followers.  // This check is added to prevent duplicate followers.  // This check is added to prevent duplicate followers.  // This check is added to prevent duplicate followers.  // This check is added to prevent duplicate followers.  // This check is added to prevent duplicate followers.  // This check is added to prevent duplicate followers.  // This check is added to prevent duplicate followers.  // This check is added to prevent duplicate followers.  // This check is added to prevent duplicate followers.  // This check is added to prevent duplicate followers.  //
+    }
     otherUser.followers.push(req.user._id);
+    req.user.following.push(otherUser._id);
     await otherUser.save();
+    await req.user.save();
 
     return res.status(200).json({ message: "User followed successfully" });
   } catch (error) {
@@ -103,8 +106,14 @@ const unfollow = async (req, res) => {
       return res.status(400).json({ message: "Cannot unfollow yourself" });
     }
 
+    if (!otherUser.followers.includes(req.user._id.toString())) {
+      return res.status(400).json({ message: "You are not following this user" });
+    }
+
     otherUser.followers.splice(req.user._id, 1);
+    req.user.following.splice(otherUser._id, 1);
     await otherUser.save();
+    await req.user.save();
 
     return res.status(200).json({ message: "User unfollowed successfully" });
   } catch (error) {

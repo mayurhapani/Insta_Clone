@@ -1,6 +1,8 @@
 import { createContext, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import Cookies from "universal-cookie";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const cookies = new Cookies();
 
@@ -12,9 +14,28 @@ export const AuthProvider = ({ children }) => {
   const [logInUser, setLogInUser] = useState({});
 
   useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await axios.get("http://localhost:8001/getUser", {
+          withCredentials: true,
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        });
+        setLogInUser(response.data.user);
+      } catch (error) {
+        if (error.response) {
+          toast.error(error.response.data.message);
+        } else {
+          toast.error(error.message);
+        }
+      }
+    };
+
     const token = localStorage.getItem("token") || cookies.get("token");
     if (token) {
       setIsLoggedIn(true);
+      fetchUser();
     } else {
       setIsLoggedIn(false);
     }

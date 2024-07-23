@@ -17,7 +17,17 @@ export default function OtherUserProfile() {
   const [delComment, setDelComment] = useState(false);
   const [newCommentAdd, setNewCommentAdd] = useState(false);
   const { logInUser } = useContext(AuthContext);
+  const [isFollow, setIsFollow] = useState(false);
 
+  useEffect(() => {
+    if (user && user.followers.includes(logInUser._id)) {
+      setIsFollow(true);
+    } else {
+      setIsFollow(false);
+    }
+  }, [user, logInUser, isFollow]);
+
+  //get other user info
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -58,9 +68,9 @@ export default function OtherUserProfile() {
 
     fetchUserData();
     fetchUserPosts();
-  }, [id, delComment, newCommentAdd]);
+  }, [id, delComment, newCommentAdd, isFollow]);
 
-  // get us post
+  // get other user post
   useEffect(() => {
     if (!userPostId) {
       return;
@@ -137,11 +147,53 @@ export default function OtherUserProfile() {
     }
   };
 
+  // follow user
+  const followUser = async (postUserId) => {
+    try {
+      const response = await axios.get(`http://localhost:8001/follow/${postUserId}`, {
+        withCredentials: true,
+        headers: {
+          "content-type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      });
+      toast.success(response.data.message);
+      setIsFollow(true);
+    } catch (error) {
+      if (error.response) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error(error.message);
+      }
+    }
+  };
+
+  //unfollow user
+  const unfollowUser = async (postUserId) => {
+    try {
+      const response = await axios.get(`http://localhost:8001/unfollow/${postUserId}`, {
+        withCredentials: true,
+        headers: {
+          "content-type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      });
+      toast.success(response.data.message);
+      setIsFollow(false);
+    } catch (error) {
+      if (error.response) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error(error.message);
+      }
+    }
+  };
+
   return (
     <>
       <div className="container mx-auto ">
         {user ? (
-          <div className="pt-32 flex flex-col items-center w-1/2 mx-auto">
+          <div className="pt-32 flex flex-col items-center w-2/3 lg:w-1/2 mx-auto">
             {/* header */}
             <div className="w-full">
               <div className="flex items-center">
@@ -151,7 +203,17 @@ export default function OtherUserProfile() {
                   alt="https://via.placeholder.com/150"
                 />
                 <div className="ps-5">
-                  <h1 className="text-3xl font-bold text-center mb-5 ">{user.username}</h1>
+                  <div className="flex justify-between items-center  mb-5">
+                    <h1 className="text-3xl font-bold text-center me-4">@ {user.username}</h1>
+                    <button
+                      className="bg-blue-600 text-white rounded-lg py-1 px-3 font-semibold hover:bg-blue-500"
+                      onClick={() => {
+                        isFollow ? unfollowUser(user._id) : followUser(user._id);
+                      }}
+                    >
+                      {isFollow ? "Unfollow" : "Follow"}
+                    </button>
+                  </div>
                   <div className="flex items-center">
                     <p className="text-sm text-gray-600 font-semibold me-4">
                       <span>{posts.length || 0}</span> Posts

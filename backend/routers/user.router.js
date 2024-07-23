@@ -15,7 +15,7 @@ uRouter.post("/signin", login);
 uRouter.get("/getUser", isAuth, getUser);
 uRouter.get("/logout", isAuth, logout);
 
-uRouter.put("/follow/:id", isAuth, follow);
-uRouter.put("/unfollow/:id", isAuth, unfollow);
+uRouter.get("/follow/:id", isAuth, follow);
+uRouter.get("/unfollow/:id", isAuth, unfollow);
 
 module.exports = uRouter;
