@@ -12,6 +12,7 @@ import Profile from "./pages/Profile";
 import Home from "./pages/Home";
 import CreatePost from "./pages/CreatePost";
 import Logout from "./components/Logout";
+import OtherUserProfile from "./pages/OtherUserProfile";
 
 function App() {
   return (
@@ -26,6 +27,8 @@ function App() {
             <Route path="/profile" element={<Profile />} />
             <Route path="/createPost" element={<CreatePost />} />
             <Route path="/logout" element={<Logout />} />
+
+            <Route path="/otherUserProfile/:id" element={<OtherUserProfile />} />
           </Routes>
           <ToastContainer />
         </AuthProvider>

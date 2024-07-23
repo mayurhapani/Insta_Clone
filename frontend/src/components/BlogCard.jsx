@@ -3,7 +3,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { useState, useEffect, useContext } from "react";
 import { AuthContext } from "../context/AuthProvider";
-
+import { useNavigate } from "react-router-dom";
 export default function BlogCard({
   post,
   user,
@@ -17,6 +17,8 @@ export default function BlogCard({
   const [comment, setComment] = useState("");
   const [commentCount, setCommentCount] = useState(post.comments.length);
   const { myPostId, setMyPostId } = useContext(AuthContext);
+
+  const navigate = useNavigate();
 
   const likePost = async () => {
     try {
@@ -91,14 +93,25 @@ export default function BlogCard({
     setDelComment,
   ]);
 
-  useEffect(() => {}, [isLiked, likesCount, myPostId, commentCount]);
+  const OtherUserPage = (userId) => {
+    navigate(`/otherUserProfile/${userId}`);
+  };
+
+  // useEffect(() => {}, [isLiked, likesCount, myPostId, commentCount]);
 
   return (
     <div className="card border border-[rgb(173, 173, 173)] rounded-sm mb-1">
       {/* card header */}
       <div className="flex justify-start items-center p-2">
         <img className="w-[40px] rounded-full me-5" src={post.user.image} alt="" />
-        <span className="font-semibold">@ {post.user.username}</span>
+        <span
+          onClick={() => {
+            OtherUserPage(post.user._id);
+          }}
+          className="font-semibold cursor-pointer hover:text-blue-800 hover:font-bold hover:underline transition-colors"
+        >
+          @ {post.user.username}
+        </span>
       </div>
       {/* card post image */}
       <div className="">
@@ -141,7 +154,7 @@ export default function BlogCard({
 
       {/* show comments */}
       <p
-        className="font-bold cursor-pointer ms-2 text-sm"
+        className="font-bold cursor-pointer ms-2 text-sm hover:text-blue-600 transition-colors "
         onClick={() => {
           setMyPostId(post._id);
         }}
@@ -177,6 +190,7 @@ export default function BlogCard({
 BlogCard.propTypes = {
   post: PropTypes.shape({
     user: PropTypes.shape({
+      _id: PropTypes.string.isRequired,
       image: PropTypes.string.isRequired,
       username: PropTypes.string.isRequired,
     }).isRequired,

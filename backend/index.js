@@ -6,6 +6,7 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const uRouter = require("./routers/user.router");
 const pRouter = require("./routers/post.router");
+const ouRouter = require("./routers/otherUser.router");
 
 require("dotenv").config();
 
@@ -21,6 +22,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/", uRouter);
 app.use("/post", pRouter);
+app.use("/oUser", ouRouter);
 
 app.listen(process.env.PORT || 0, () => {
   db();

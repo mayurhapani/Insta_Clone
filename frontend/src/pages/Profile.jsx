@@ -8,7 +8,7 @@ import Cookies from "universal-cookie";
 const cookies = new Cookies();
 
 export default function Profile() {
-  const [user, setUser] = useState([]);
+  // const [user, setUser] = useState([]);
   const [myPosts, setMyPosts] = useState([]);
   const [myPost, setMyPost] = useState({});
   const [comment, setComment] = useState("");
@@ -16,7 +16,7 @@ export default function Profile() {
   const [newCommentAdd, setNewCommentAdd] = useState(false);
   const [delComment, setDelComment] = useState(false);
 
-  const { isLoggedIn, myPostId, setMyPostId } = useContext(AuthContext);
+  const { isLoggedIn, myPostId, setMyPostId, logInUser, setLogInUser } = useContext(AuthContext);
 
   const navigate = useNavigate();
 
@@ -36,7 +36,8 @@ export default function Profile() {
             Authorization: "Bearer " + localStorage.getItem("token"),
           },
         });
-        setUser(response.data.user);
+        setLogInUser(response.data.user);
+        // setUser(response.data.user);
         setMyPosts(response.data.myPost);
       } catch (error) {
         if (error.response) {
@@ -159,14 +160,14 @@ export default function Profile() {
             <div className="flex items-center">
               <img
                 className="rounded-full w-32 h-32"
-                src={user.image}
+                src={logInUser.image}
                 alt="https://via.placeholder.com/150"
               />
               <div className="ps-5">
-                <h1 className="text-3xl font-bold text-center mb-5 ">{user.username}</h1>
+                <h1 className="text-3xl font-bold text-center mb-5 ">{logInUser.username}</h1>
                 <div className="flex items-center">
                   <p className="text-sm text-gray-600 font-semibold me-4">
-                    <span>{myPost.length || 0}</span> Posts
+                    <span>{myPosts.length || 0}</span> Posts
                   </p>
                   <p className="text-sm text-gray-600 font-semibold me-4">
                     <span>40</span> Followers
