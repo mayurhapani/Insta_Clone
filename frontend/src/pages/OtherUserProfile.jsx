@@ -10,13 +10,13 @@ export default function OtherUserProfile() {
   const [user, setUser] = useState(null);
   const [posts, setPosts] = useState([]);
   const [userPost, setUserPost] = useState({});
+  const [userPostId, setUserPostId] = useState("");
   const [viewPost, setViewPost] = useState(null);
 
-  const [comment, setComment] = useState(null);
-  // const [userPostId, setUserPostId] = useState("");
-
+  const [comment, setComment] = useState("");
+  const [delComment, setDelComment] = useState(false);
+  const [newCommentAdd, setNewCommentAdd] = useState(false);
   const { logInUser } = useContext(AuthContext);
-  console.log(logInUser);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -58,7 +58,84 @@ export default function OtherUserProfile() {
 
     fetchUserData();
     fetchUserPosts();
-  }, [id]);
+  }, [id, delComment, newCommentAdd]);
+
+  // get us post
+  useEffect(() => {
+    if (!userPostId) {
+      return;
+    }
+    const fetchMyPosts = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8001/oUser/getUserPost/${userPostId}`, {
+          withCredentials: true,
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        });
+        setUserPost(response.data);
+        setViewPost(true);
+      } catch (error) {
+        if (error.response) {
+          toast.error(error.response.data.message);
+        } else {
+          toast.error(error.message);
+        }
+      }
+    };
+    setDelComment(false);
+
+    fetchMyPosts();
+  }, [userPostId, viewPost, newCommentAdd, delComment]);
+
+  // delete comments
+  const deleteComment = async (commentId, postId) => {
+    try {
+      const response = await axios.delete(`http://localhost:8001/post/deleteComment`, {
+        params: {
+          commentId,
+          postId,
+        },
+        withCredentials: true,
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      });
+      toast.success(response.data.message);
+      setDelComment(true);
+    } catch (error) {
+      if (error.response) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error(error.message);
+      }
+    }
+  };
+
+  // add comments
+  const addComment = async (post) => {
+    try {
+      const response = await axios.post(
+        `http://localhost:8001/post/addComment/${post._id}`,
+        { comment },
+        {
+          withCredentials: true,
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        }
+      );
+      setComment("");
+      setNewCommentAdd(true);
+      toast.success(response.data.message);
+    } catch (error) {
+      if (error.response) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error(error.message);
+      }
+    }
+  };
 
   return (
     <>
@@ -98,9 +175,9 @@ export default function OtherUserProfile() {
                 <div key={post._id} className="w-1/3 p-1 ">
                   <div
                     onClick={() => {
-                      setUserPost(post);
-                      setViewPost(true);
-                      // setUserPostId(post._id);
+                      // setUserPost(post);
+                      // setViewPost(true);
+                      setUserPostId(post._id);
                     }}
                     className="border border-gray-300 w-full aspect-square cursor-pointer"
                   >
@@ -140,11 +217,11 @@ export default function OtherUserProfile() {
                         <span className="font-bold me-2">@ {comment.user.username} : </span>
                         {comment.comment}
                       </p>
-                      {comment.user == logInUser._id && (
+                      {comment.user._id == logInUser._id && (
                         <div
                           className="cursor-pointer"
                           onClick={() => {
-                            // deleteComment(comment._id, userPost._id);
+                            deleteComment(comment._id, userPost._id);
                           }}
                         >
                           <span className="material-symbols-outlined text-red-800 text-lg font-bold">
@@ -174,9 +251,9 @@ export default function OtherUserProfile() {
                   placeholder="Add Comments..."
                 />
                 <button
-                  // onClick={() => {
-                  //   addComment(userPost);
-                  // }}
+                  onClick={() => {
+                    addComment(userPost);
+                  }}
                   className="px-1 pb-2 text-lg text-blue-800 font-semibold"
                 >
                   post
@@ -190,7 +267,7 @@ export default function OtherUserProfile() {
             className=" fixed top-5 right-5 cursor-pointer"
             onClick={() => {
               setViewPost(false);
-              // setUserPostId("");
+              setUserPostId("");
             }}
           >
             <span className="material-symbols-outlined text-white text-4xl font-bold">close</span>

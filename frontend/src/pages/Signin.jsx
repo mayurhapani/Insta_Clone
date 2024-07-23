@@ -11,7 +11,7 @@ const cookies = new Cookies();
 export default function Signin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { setIsLoggedIn } = useContext(AuthContext);
+  const { setIsLoggedIn, setLogInUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const notify1 = (msg) => toast.error(msg);
@@ -51,6 +51,8 @@ export default function Signin() {
         cookies.set("token", token, { path: "/" });
         localStorage.setItem("token", token);
         setIsLoggedIn(true);
+
+        setLogInUser(response.data.user);
         notify2(response.data.message);
         navigate("/");
       } else {

@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthProvider";
 
 export default function Logout() {
-  const { setIsLoggedIn } = useContext(AuthContext);
+  const { setIsLoggedIn, setLogInUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -24,6 +24,7 @@ export default function Logout() {
         if (response.status === 200 && isMounted) {
           localStorage.removeItem("token");
           setIsLoggedIn(false);
+          setLogInUser({});
           toast.success(response.data.message);
           navigate("/");
         }

@@ -26,4 +26,18 @@ const getUserPosts = async (req, res) => {
   }
 };
 
-module.exports = { getOtherUser, getUserPosts };
+const getUserPost = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const post = await postModel
+      .findById(id)
+      .populate("user", "username image")
+      .populate("comments.user", "username");
+
+    return res.json(post);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+module.exports = { getOtherUser, getUserPosts, getUserPost };

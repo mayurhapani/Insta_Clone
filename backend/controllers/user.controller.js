@@ -47,7 +47,7 @@ const login = async (req, res) => {
         sameSite: "strict",
       });
 
-      return res.status(200).json({ token, message: "Login Successfully" });
+      return res.status(200).json({ token, user, message: "Login Successfully" });
     }
   } catch (error) {
     return res.status(500).json({ message: error.message });
