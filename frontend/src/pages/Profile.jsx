@@ -158,7 +158,6 @@ export default function Profile() {
   const chooseProPic = () => {
     targetProfilePictureInput.current.click();
   };
-  // console.log(profilePic);
 
   const uploadProfilePic = async () => {
     try {
@@ -170,7 +169,7 @@ export default function Profile() {
         return;
       }
 
-      // image upload
+      // image upload to cloudinary
       const dataImage = new FormData();
       dataImage.append("file", profilePic);
       dataImage.append("upload_preset", "instaClone");
@@ -182,7 +181,6 @@ export default function Profile() {
         dataImage
       );
       const uploadedImagePath = responseImage.data.url;
-      console.log(uploadedImagePath);
 
       // data send to backend
       const response = await axios.post(
@@ -199,7 +197,8 @@ export default function Profile() {
       );
 
       toast.success(response.data.message);
-      navigate("/profile");
+      setProPicModel(false);
+      window.location.reload();
     } catch (error) {
       if (error.response) {
         toast.error(error.response.data.message);

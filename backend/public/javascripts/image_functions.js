@@ -16,7 +16,6 @@ const extractPublicId = (url) => {
 const deleteImageByUrl = async (publicId, res) => {
   try {
     await cloudinary.uploader.destroy(publicId);
-    // return res.status(200).json({ message: "Image deleted successfully" });
   } catch (error) {
     return res.status(422).json({ message: error.message });
   }

@@ -128,6 +128,9 @@ const profilePic = async (req, res) => {
   try {
     if (!image) return res.status(422).json({ message: "Fill all the inputs" });
 
+    const OldImage = req.user.image ? extractPublicId(req.user.image) : null;
+    if (OldImage) await deleteImageByUrl(`users/${OldImage}`, res);
+
     const response = await userModel.findByIdAndUpdate(
       req.user._id,
       { $set: { image } },
@@ -139,7 +142,7 @@ const profilePic = async (req, res) => {
     if (response) return res.status(201).json({ message: "Profile Picture Uploaded Successfully" });
     else return res.status(422).json({ message: response.message });
   } catch (error) {
-    if (image_Id) deleteImageByUrl(image_Id);
+    if (image_Id) await deleteImageByUrl(`users/${image_Id}`, res);
     return res.status(500).json({ message: error.message });
   }
 };

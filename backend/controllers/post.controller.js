@@ -39,7 +39,7 @@ const createPost = async (req, res) => {
     if (response) return res.status(201).json({ message: "Post Created Successfully" });
     else return res.status(422).json({ message: response.message });
   } catch (error) {
-    if (image_Id) deleteImageByUrl(image_Id);
+    if (image_Id) await deleteImageByUrl(`posts/${image_Id}`, res);
     return res.status(500).json({ message: error.message });
   }
 };
