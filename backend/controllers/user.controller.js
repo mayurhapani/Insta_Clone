@@ -3,6 +3,8 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { extractPublicId, deleteImageByUrl } = require("../public/javascripts/image_functions");
 const postModel = require("../models/post.model");
+const defaultImag =
+  "https://res.cloudinary.com/instaclone21/image/upload/v1721210287/users/u0qrfanxqztl61j37odp.png";
 
 const signup = async (req, res) => {
   try {
@@ -129,7 +131,6 @@ const profilePic = async (req, res) => {
     if (!image) return res.status(422).json({ message: "Fill all the inputs" });
 
     const OldImage = req.user.image ? extractPublicId(req.user.image) : null;
-    console.log(OldImage);
     if (OldImage) await deleteImageByUrl(`users/${OldImage}`, res);
 
     const response = await userModel.findByIdAndUpdate(
@@ -148,4 +149,24 @@ const profilePic = async (req, res) => {
   }
 };
 
-module.exports = { signup, login, getUser, logout, follow, unfollow, profilePic };
+const removeProfilePic = async (req, res) => {
+  try {
+    const OldImage = req.user.image ? extractPublicId(req.user.image) : null;
+    if (OldImage) await deleteImageByUrl(`users/${OldImage}`, res);
+
+    const response = await userModel.findByIdAndUpdate(
+      req.user._id,
+      { $set: { image: defaultImag } },
+      {
+        new: true,
+      }
+    );
+
+    if (response) return res.status(201).json({ message: "Profile Picture Removed Successfully" });
+    else return res.status(422).json({ message: response.message });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+module.exports = { signup, login, getUser, logout, follow, unfollow, profilePic, removeProfilePic };

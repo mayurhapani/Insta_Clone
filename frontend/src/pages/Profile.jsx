@@ -214,6 +214,25 @@ export default function Profile() {
     }
   }, [profilePic]);
 
+  //! delete profile picture
+  const deleteProfilePic = async () => {
+    try {
+      const response = await axios.delete("http://localhost:8001/removeProfilePic", {
+        withCredentials: true,
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      });
+      toast.success(response.data.message);
+      window.location.reload();
+    } catch (error) {
+      if (error.response) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error(error.message);
+      }
+    }
+  };
   return (
     <>
       <div className="container mx-auto ">
@@ -379,7 +398,10 @@ export default function Profile() {
                 />
               </div>
               <div className="flex justify-center py-4 border-t-2">
-                <button className="text-red-500 hover:text-red-800 font-semibold text-lg">
+                <button
+                  className="text-red-500 hover:text-red-800 font-semibold text-lg"
+                  onClick={() => deleteProfilePic()}
+                >
                   Remove Current Profile Picture
                 </button>
               </div>

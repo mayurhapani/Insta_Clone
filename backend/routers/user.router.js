@@ -9,12 +9,14 @@ const {
   follow,
   unfollow,
   profilePic,
+  removeProfilePic,
 } = require("../controllers/user.controller");
 
 uRouter.post("/signup", signup);
 uRouter.post("/signin", login);
 
 uRouter.post("/profilePic", isAuth, profilePic);
+uRouter.delete("/removeProfilePic", isAuth, removeProfilePic);
 
 uRouter.get("/getUser", isAuth, getUser);
 uRouter.get("/logout", isAuth, logout);
