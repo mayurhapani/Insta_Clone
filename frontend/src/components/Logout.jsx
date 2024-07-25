@@ -41,7 +41,7 @@ export default function Logout() {
     return () => {
       isMounted = false;
     };
-  }, [navigate, setIsLoggedIn]);
+  }, [navigate, setIsLoggedIn, setLogInUser]);
 
   return null;
 }

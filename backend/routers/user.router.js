@@ -8,10 +8,13 @@ const {
   logout,
   follow,
   unfollow,
+  profilePic,
 } = require("../controllers/user.controller");
 
 uRouter.post("/signup", signup);
 uRouter.post("/signin", login);
+
+uRouter.post("/profilePic", isAuth, profilePic);
 
 uRouter.get("/getUser", isAuth, getUser);
 uRouter.get("/logout", isAuth, logout);

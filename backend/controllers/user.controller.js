@@ -121,4 +121,27 @@ const unfollow = async (req, res) => {
   }
 };
 
-module.exports = { signup, login, getUser, logout, follow, unfollow };
+const profilePic = async (req, res) => {
+  const { image } = req.body;
+  const image_Id = extractPublicId(image);
+
+  try {
+    if (!image) return res.status(422).json({ message: "Fill all the inputs" });
+
+    const response = await userModel.findByIdAndUpdate(
+      req.user._id,
+      { $set: { image } },
+      {
+        new: true,
+      }
+    );
+
+    if (response) return res.status(201).json({ message: "Profile Picture Uploaded Successfully" });
+    else return res.status(422).json({ message: response.message });
+  } catch (error) {
+    if (image_Id) deleteImageByUrl(image_Id);
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+module.exports = { signup, login, getUser, logout, follow, unfollow, profilePic };

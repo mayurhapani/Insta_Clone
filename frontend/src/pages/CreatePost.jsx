@@ -98,7 +98,11 @@ export default function CreatePost() {
         navigate("/createPost");
       }
     } catch (error) {
-      console.log(error.message);
+      if (error.response) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error(error.message);
+      }
     }
   };
 

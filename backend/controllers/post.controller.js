@@ -34,8 +34,10 @@ const createPost = async (req, res) => {
     if (!image || !disc) return res.status(422).json({ message: "Fill all the inputs" });
 
     const user = req.user._id;
-    await postModel.create({ disc, image, user, image_Id });
-    return res.status(201).json({ message: "Post Created Successfully" });
+    const response = await postModel.create({ disc, image, user, image_Id });
+
+    if (response) return res.status(201).json({ message: "Post Created Successfully" });
+    else return res.status(422).json({ message: response.message });
   } catch (error) {
     if (image_Id) deleteImageByUrl(image_Id);
     return res.status(500).json({ message: error.message });
