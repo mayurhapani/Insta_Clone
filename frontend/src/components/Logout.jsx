@@ -14,7 +14,7 @@ export default function Logout() {
     const logout = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await axios.get("http://localhost:8001/logout", {
+        const response = await axios.get(`${process.env.BASE_URL}/logout`, {
           withCredentials: true,
           headers: {
             Authorization: "Bearer " + token,

@@ -31,7 +31,7 @@ export default function MyFollowing() {
     // Fetch posts when component mounts
     const fetchPosts = async () => {
       try {
-        const response = await axios.get("http://localhost:8001/post/myFollowing", {
+        const response = await axios.get(`${process.env.BASE_URL}/post/myFollowing`, {
           withCredentials: true,
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
@@ -49,7 +49,7 @@ export default function MyFollowing() {
 
     const fetchUser = async () => {
       try {
-        const response = await axios.get("http://localhost:8001/getUser", {
+        const response = await axios.get(`${process.env.BASE_URL}/getUser`, {
           withCredentials: true,
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
@@ -76,7 +76,7 @@ export default function MyFollowing() {
     }
     const fetchMyPosts = async () => {
       try {
-        const response = await axios.get(`http://localhost:8001/post/getMyPosts/${myPostId}`, {
+        const response = await axios.get(`${process.env.BASE_URL}/post/getMyPosts/${myPostId}`, {
           withCredentials: true,
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
@@ -100,7 +100,7 @@ export default function MyFollowing() {
   const addComment = async (post) => {
     try {
       const response = await axios.post(
-        `http://localhost:8001/post/addComment/${post._id}`,
+        `${process.env.BASE_URL}/post/addComment/${post._id}`,
         { comment },
         {
           withCredentials: true,
@@ -123,7 +123,7 @@ export default function MyFollowing() {
 
   const deleteComment = async (commentId, postId) => {
     try {
-      const response = await axios.delete(`http://localhost:8001/post/deleteComment`, {
+      const response = await axios.delete(`${process.env.BASE_URL}/post/deleteComment`, {
         params: {
           commentId,
           postId,

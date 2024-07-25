@@ -22,7 +22,7 @@ export default function BlogCard({
 
   const likePost = async () => {
     try {
-      const response = await axios.get(`http://localhost:8001/post/like/${post._id}`, {
+      const response = await axios.get(`${process.env.BASE_URL}/post/like/${post._id}`, {
         withCredentials: true,
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token"),
@@ -50,7 +50,7 @@ export default function BlogCard({
   const addComment = async (post) => {
     try {
       const response = await axios.post(
-        `http://localhost:8001/post/addComment/${post._id}`,
+        `${process.env.BASE_URL}/post/addComment/${post._id}`,
         { comment },
         {
           withCredentials: true,

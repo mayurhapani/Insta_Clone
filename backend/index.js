@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const db = require("./config/database");
+PORT = process.env.PORT || 5000;
 
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
@@ -24,7 +25,7 @@ app.use("/", uRouter);
 app.use("/post", pRouter);
 app.use("/oUser", ouRouter);
 
-app.listen(process.env.PORT || 0, () => {
+app.listen(PORT, () => {
   db();
-  console.log("server stated on http://localhost:" + process.env.PORT);
+  console.log("server stated on http://localhost:" + PORT);
 });
