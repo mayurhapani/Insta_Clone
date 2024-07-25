@@ -129,6 +129,7 @@ const profilePic = async (req, res) => {
     if (!image) return res.status(422).json({ message: "Fill all the inputs" });
 
     const OldImage = req.user.image ? extractPublicId(req.user.image) : null;
+    console.log(OldImage);
     if (OldImage) await deleteImageByUrl(`users/${OldImage}`, res);
 
     const response = await userModel.findByIdAndUpdate(

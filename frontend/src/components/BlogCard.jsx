@@ -97,13 +97,11 @@ export default function BlogCard({
     navigate(`/otherUserProfile/${userId}`);
   };
 
-  // useEffect(() => {}, [isLiked, likesCount, myPostId, commentCount]);
-
   return (
     <div className="card border border-[rgb(173, 173, 173)] rounded-sm mb-1">
       {/* card header */}
       <div className="flex justify-start items-center p-2">
-        <img className="w-[40px] rounded-full me-5" src={post.user.image} alt="" />
+        <img className="w-[45px] h-[45px] rounded-full me-5" src={post.user.image} alt="" />
         <span
           onClick={() => {
             OtherUserPage(post.user._id);
