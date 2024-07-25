@@ -50,9 +50,9 @@ export default function Signin() {
         const token = response.data.token;
         cookies.set("token", token, { path: "/" });
         localStorage.setItem("token", token);
+        localStorage.setItem("id", response.data.user._id);
         setIsLoggedIn(true);
 
-        // setLogInUser(response.data.user);
         notify2(response.data.message);
         navigate("/");
       } else {

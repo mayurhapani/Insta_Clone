@@ -20,16 +20,19 @@ export default function Header() {
                 <li className="py-3 px-6 text-xl font-semibold text-gray-600">Sign Up</li>
               </Link>
               <Link to="/" className={isLoggedIn ? "block" : "hidden"}>
-                <li className="py-3 px-6 text-xl font-semibold text-gray-600">Home</li>
+                <li className="py-2 px-3 text-xl font-semibold text-gray-600">Home</li>
+              </Link>
+              <Link to="/myFollowing" className={isLoggedIn ? "block" : "hidden"}>
+                <li className="py-2 px-3 text-xl font-semibold text-gray-600">My Following</li>
               </Link>
               <Link to="/profile" className={isLoggedIn ? "block" : "hidden"}>
-                <li className="py-3 px-6 text-xl font-semibold text-gray-600">Profile</li>
+                <li className="py-2 px-3 text-xl font-semibold text-gray-600">Profile</li>
               </Link>
               <Link to="/createPost" className={isLoggedIn ? "block" : "hidden"}>
-                <li className="py-3 px-6 text-xl font-semibold text-gray-600">Create Post</li>
+                <li className="py-2 px-3 text-xl font-semibold text-gray-600">Create Post</li>
               </Link>
               <Link to="/logout" className={isLoggedIn ? "block" : "hidden"}>
-                <li className="py-3 px-6 text-xl font-semibold text-gray-600">LogOut</li>
+                <li className="py-2 px-3 text-xl font-semibold text-gray-600">LogOut</li>
               </Link>
             </ul>
           </nav>

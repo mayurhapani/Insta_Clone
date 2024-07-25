@@ -8,7 +8,7 @@ import Cookies from "universal-cookie";
 
 const cookies = new Cookies();
 
-export default function Home() {
+export default function MyFollowing() {
   const [user, setUser] = useState({});
   const [posts, setPosts] = useState([]);
   const [myPost, setMyPost] = useState({});
@@ -31,13 +31,13 @@ export default function Home() {
     // Fetch posts when component mounts
     const fetchPosts = async () => {
       try {
-        const response = await axios.get("http://localhost:8001/post/getPosts", {
+        const response = await axios.get("http://localhost:8001/post/myFollowing", {
           withCredentials: true,
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
           },
         });
-        setPosts(response.data.reverse());
+        setPosts(response.data.followingPosts.reverse());
       } catch (error) {
         if (error.response) {
           toast.error(error.response.data.message);

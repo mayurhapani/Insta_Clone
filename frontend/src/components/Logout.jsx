@@ -23,6 +23,7 @@ export default function Logout() {
 
         if (response.status === 200 && isMounted) {
           localStorage.removeItem("token");
+          localStorage.removeItem("id");
           setIsLoggedIn(false);
           setLogInUser({});
           toast.success(response.data.message);

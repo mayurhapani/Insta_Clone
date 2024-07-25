@@ -112,6 +112,17 @@ const deleteComment = async (req, res) => {
   }
 };
 
+const myFollowing = async (req, res) => {
+  try {
+    const followingPosts = await postModel
+      .find({ user: { $in: req.user.following } })
+      .populate("user");
+    return res.status(200).json({ followingPosts });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   createPost,
   deletePost,
@@ -120,4 +131,5 @@ module.exports = {
   likePost,
   addComment,
   deleteComment,
+  myFollowing,
 };

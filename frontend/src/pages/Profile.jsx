@@ -38,7 +38,6 @@ export default function Profile() {
         });
         // setLogInUser(response.data.user);
         setUser(response.data.user);
-        localStorage.setItem("id", response.data.user._id);
         setMyPosts(response.data.myPost);
       } catch (error) {
         if (error.response) {

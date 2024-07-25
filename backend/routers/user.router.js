@@ -12,6 +12,7 @@ const {
 
 uRouter.post("/signup", signup);
 uRouter.post("/signin", login);
+
 uRouter.get("/getUser", isAuth, getUser);
 uRouter.get("/logout", isAuth, logout);
 
