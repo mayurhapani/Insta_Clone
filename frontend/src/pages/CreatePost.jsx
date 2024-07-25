@@ -16,6 +16,8 @@ export default function CreatePost() {
   const { isLoggedIn } = useContext(AuthContext);
   const navigate = useNavigate();
 
+  const BASE_URL = import.meta.env.VITE_BASE_URL;
+
   // console.log(user);
   useEffect(() => {
     const token = localStorage.getItem("token") || cookies.get("token");
@@ -27,7 +29,7 @@ export default function CreatePost() {
 
     const fetchUser = async () => {
       try {
-        const response = await axios.get(`${process.env.BASE_URL}/getUser`, {
+        const response = await axios.get(`${BASE_URL}/getUser`, {
           withCredentials: true,
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
@@ -76,7 +78,7 @@ export default function CreatePost() {
 
       // data send to backend
       const response = await axios.post(
-        `${process.env.BASE_URL}/post/createPost`,
+        `${BASE_URL}/post/createPost`,
         {
           disc: disc,
           image: uploadedImagePath,

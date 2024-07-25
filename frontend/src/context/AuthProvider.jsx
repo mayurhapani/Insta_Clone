@@ -13,10 +13,12 @@ export const AuthProvider = ({ children }) => {
   const [myPostId, setMyPostId] = useState("");
   const [logInUser, setLogInUser] = useState({});
 
+  const BASE_URL = import.meta.env.VITE_BASE_URL;
+
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await axios.get(`${process.env.BASE_URL}/getUser`, {
+        const response = await axios.get(`${BASE_URL}/getUser`, {
           withCredentials: true,
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),

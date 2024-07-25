@@ -19,11 +19,13 @@ export default function OtherUserProfile() {
   const { logInUser } = useContext(AuthContext);
   const [isFollow, setIsFollow] = useState(false);
 
+  const BASE_URL = import.meta.env.VITE_BASE_URL;
+
   //get other user info
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get(`${process.env.BASE_URL}/oUser/getUser/${id}`, {
+        const response = await axios.get(`${BASE_URL}/oUser/getUser/${id}`, {
           withCredentials: true,
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
@@ -42,7 +44,7 @@ export default function OtherUserProfile() {
     // Fetch posts when component mounts
     const fetchUserPosts = async () => {
       try {
-        const response = await axios.get(`${process.env.BASE_URL}/oUser/getUserPosts/${id}`, {
+        const response = await axios.get(`${BASE_URL}/oUser/getUserPosts/${id}`, {
           withCredentials: true,
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
@@ -69,15 +71,12 @@ export default function OtherUserProfile() {
     }
     const fetchMyPosts = async () => {
       try {
-        const response = await axios.get(
-          `${process.env.BASE_URL}/oUser/getUserPost/${userPostId}`,
-          {
-            withCredentials: true,
-            headers: {
-              Authorization: "Bearer " + localStorage.getItem("token"),
-            },
-          }
-        );
+        const response = await axios.get(`${BASE_URL}/oUser/getUserPost/${userPostId}`, {
+          withCredentials: true,
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        });
         setUserPost(response.data);
         setViewPost(true);
       } catch (error) {
@@ -108,7 +107,7 @@ export default function OtherUserProfile() {
   // delete comments
   const deleteComment = async (commentId, postId) => {
     try {
-      const response = await axios.delete(`${process.env.BASE_URL}/post/deleteComment`, {
+      const response = await axios.delete(`${BASE_URL}/post/deleteComment`, {
         params: {
           commentId,
           postId,
@@ -133,7 +132,7 @@ export default function OtherUserProfile() {
   const addComment = async (post) => {
     try {
       const response = await axios.post(
-        `${process.env.BASE_URL}/post/addComment/${post._id}`,
+        `${BASE_URL}/post/addComment/${post._id}`,
         { comment },
         {
           withCredentials: true,
@@ -157,7 +156,7 @@ export default function OtherUserProfile() {
   // follow user
   const followUser = async (postUserId) => {
     try {
-      const response = await axios.get(`${process.env.BASE_URL}/follow/${postUserId}`, {
+      const response = await axios.get(`${BASE_URL}/follow/${postUserId}`, {
         withCredentials: true,
         headers: {
           "content-type": "application/json",
@@ -178,7 +177,7 @@ export default function OtherUserProfile() {
   //unfollow user
   const unfollowUser = async (postUserId) => {
     try {
-      const response = await axios.get(`${process.env.BASE_URL}/unfollow/${postUserId}`, {
+      const response = await axios.get(`${BASE_URL}/unfollow/${postUserId}`, {
         withCredentials: true,
         headers: {
           "content-type": "application/json",

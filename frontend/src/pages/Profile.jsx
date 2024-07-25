@@ -23,6 +23,8 @@ export default function Profile() {
 
   const navigate = useNavigate();
 
+  const BASE_URL = import.meta.env.VITE_BASE_URL;
+
   useEffect(() => {
     const token = localStorage.getItem("token") || cookies.get("token");
 
@@ -33,7 +35,7 @@ export default function Profile() {
 
     const fetchUser = async () => {
       try {
-        const response = await axios.get(`${process.env.BASE_URL}/getUser`, {
+        const response = await axios.get(`${BASE_URL}/getUser`, {
           withCredentials: true,
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
@@ -61,7 +63,7 @@ export default function Profile() {
     }
     const fetchMyPosts = async () => {
       try {
-        const response = await axios.get(`${process.env.BASE_URL}/post/getMyPosts/${myPostId}`, {
+        const response = await axios.get(`${BASE_URL}/post/getMyPosts/${myPostId}`, {
           withCredentials: true,
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
@@ -86,7 +88,7 @@ export default function Profile() {
   const deletePost = async (id) => {
     try {
       if (window.confirm("Do you want to delete this post")) {
-        const response = await axios.delete(`${process.env.BASE_URL}/post/deletePost/${id}`, {
+        const response = await axios.delete(`${BASE_URL}/post/deletePost/${id}`, {
           withCredentials: true,
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
@@ -109,7 +111,7 @@ export default function Profile() {
   const addComment = async (post) => {
     try {
       const response = await axios.post(
-        `${process.env.BASE_URL}/post/addComment/${post._id}`,
+        `${BASE_URL}/post/addComment/${post._id}`,
         { comment },
         {
           withCredentials: true,
@@ -133,7 +135,7 @@ export default function Profile() {
   //! delete comments
   const deleteComment = async (commentId, postId) => {
     try {
-      const response = await axios.delete(`${process.env.BASE_URL}/post/deleteComment`, {
+      const response = await axios.delete(`${BASE_URL}/post/deleteComment`, {
         params: {
           commentId,
           postId,
@@ -184,7 +186,7 @@ export default function Profile() {
 
       // data send to backend
       const response = await axios.post(
-        `${process.env.BASE_URL}/profilePic`,
+        `${BASE_URL}/profilePic`,
         {
           image: uploadedImagePath,
         },
@@ -217,7 +219,7 @@ export default function Profile() {
   //! delete profile picture
   const deleteProfilePic = async () => {
     try {
-      const response = await axios.delete(`${process.env.BASE_URL}/removeProfilePic`, {
+      const response = await axios.delete(`${BASE_URL}/removeProfilePic`, {
         withCredentials: true,
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token"),

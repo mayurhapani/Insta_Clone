@@ -8,13 +8,15 @@ export default function Logout() {
   const { setIsLoggedIn, setLogInUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
+  const BASE_URL = import.meta.env.VITE_BASE_URL;
+
   useEffect(() => {
     let isMounted = true;
 
     const logout = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await axios.get(`${process.env.BASE_URL}/logout`, {
+        const response = await axios.get(`${BASE_URL}/logout`, {
           withCredentials: true,
           headers: {
             Authorization: "Bearer " + token,

@@ -14,6 +14,8 @@ export default function Signin() {
   const { setIsLoggedIn } = useContext(AuthContext);
   const navigate = useNavigate();
 
+  const BASE_URL = import.meta.env.VITE_BASE_URL;
+
   const notify1 = (msg) => toast.error(msg);
   const notify2 = (msg) => toast.success(msg);
 
@@ -37,7 +39,7 @@ export default function Signin() {
 
     try {
       const response = await axios.post(
-        `${process.env.BASE_URL}/signin`,
+        `${BASE_URL}/signin`,
         {
           email,
           password,

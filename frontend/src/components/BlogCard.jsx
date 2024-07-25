@@ -20,9 +20,11 @@ export default function BlogCard({
 
   const navigate = useNavigate();
 
+  const BASE_URL = import.meta.env.VITE_BASE_URL;
+
   const likePost = async () => {
     try {
-      const response = await axios.get(`${process.env.BASE_URL}/post/like/${post._id}`, {
+      const response = await axios.get(`${BASE_URL}/post/like/${post._id}`, {
         withCredentials: true,
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token"),
@@ -50,7 +52,7 @@ export default function BlogCard({
   const addComment = async (post) => {
     try {
       const response = await axios.post(
-        `${process.env.BASE_URL}/post/addComment/${post._id}`,
+        `${BASE_URL}/post/addComment/${post._id}`,
         { comment },
         {
           withCredentials: true,

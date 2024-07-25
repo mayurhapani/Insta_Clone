@@ -1,15 +1,15 @@
 const express = require("express");
 const app = express();
 const db = require("./config/database");
-PORT = process.env.PORT || 5000;
+require("dotenv").config();
+
+port = process.env.PORT;
 
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const uRouter = require("./routers/user.router");
 const pRouter = require("./routers/post.router");
 const ouRouter = require("./routers/otherUser.router");
-
-require("dotenv").config();
 
 app.use(
   cors({
@@ -25,7 +25,7 @@ app.use("/", uRouter);
 app.use("/post", pRouter);
 app.use("/oUser", ouRouter);
 
-app.listen(PORT, () => {
+app.listen(port, () => {
   db();
-  console.log("server stated on http://localhost:" + PORT);
+  console.log("server stated on http://localhost:" + port);
 });

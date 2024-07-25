@@ -20,6 +20,8 @@ export default function Home() {
   const { isLoggedIn, myPostId, setMyPostId } = useContext(AuthContext);
   const navigate = useNavigate();
 
+  const BASE_URL = import.meta.env.VITE_BASE_URL;
+
   useEffect(() => {
     const token = localStorage.getItem("token") || cookies.get("token");
 
@@ -31,7 +33,7 @@ export default function Home() {
     // Fetch posts when component mounts
     const fetchPosts = async () => {
       try {
-        const response = await axios.get(`${process.env.BASE_URL}/post/getPosts`, {
+        const response = await axios.get(`${BASE_URL}/post/getPosts`, {
           withCredentials: true,
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
@@ -49,7 +51,7 @@ export default function Home() {
 
     const fetchUser = async () => {
       try {
-        const response = await axios.get(`${process.env.BASE_URL}/getUser`, {
+        const response = await axios.get(`${BASE_URL}/getUser`, {
           withCredentials: true,
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
@@ -76,7 +78,7 @@ export default function Home() {
     }
     const fetchMyPosts = async () => {
       try {
-        const response = await axios.get(`${process.env.BASE_URL}/post/getMyPosts/${myPostId}`, {
+        const response = await axios.get(`${BASE_URL}/post/getMyPosts/${myPostId}`, {
           withCredentials: true,
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
@@ -100,7 +102,7 @@ export default function Home() {
   const addComment = async (post) => {
     try {
       const response = await axios.post(
-        `${process.env.BASE_URL}/post/addComment/${post._id}`,
+        `${BASE_URL}/post/addComment/${post._id}`,
         { comment },
         {
           withCredentials: true,
@@ -123,7 +125,7 @@ export default function Home() {
 
   const deleteComment = async (commentId, postId) => {
     try {
-      const response = await axios.delete(`${process.env.BASE_URL}/post/deleteComment`, {
+      const response = await axios.delete(`${BASE_URL}/post/deleteComment`, {
         params: {
           commentId,
           postId,
